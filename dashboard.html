@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width,initial-scale=1">
+
+<title>MAPL Sales Dashboard</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+:root{
+--bg:#f3f5f7;
+--card:#fff;
+--text:#111827;
+--muted:#667085;
+--line:#dfe4ea;
+--red:#e51d2a;
+}
+
+html.dark{
+--bg:#070a0f;
+--card:#101720;
+--text:#f5f7fa;
+--muted:#96a3b3;
+--line:#293543;
+}
+
+*{
+box-sizing:border-box;
+}
+
+body{
+margin:0;
+background:var(--bg);
+color:var(--text);
+font-family:Inter,Segoe UI,Arial;
+transition:.25s;
+}
+
+.header{
+position:sticky;
+top:0;
+z-index:20;
+background:var(--card);
+border-bottom:1px solid var(--line);
+padding:12px 5%;
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:15px;
+}
+
+.brand{
+display:flex;
+align-items:center;
+gap:12px;
+}
+
+.logo-box{
+background:#fff;
+border-radius:9px;
+padding:5px 9px;
+}
+
+.logo{
+width:145px;
+height:40px;
+object-fit:contain;
+}
+
+.title{
+font-weight:900;
+}
+
+.sub{
+font-size:11px;
+color:var(--muted);
+}
+
+.actions{
+display:flex;
+gap:8px;
+}
+
+.btn{
+border:1px solid var(--line);
+background:var(--card);
+color:var(--text);
+border-radius:10px;
+padding:10px 13px;
+text-decoration:none;
+cursor:pointer;
+}
+
+.primary{
+background:var(--red);
+color:#fff;
+border-color:var(--red);
+}
+
+.wrap{
+max-width:1450px;
+margin:auto;
+padding:25px;
+}
+
+.hero{
+margin-bottom:20px;
+}
+
+.hero h1{
+margin:0 0 5px;
+font-size:32px;
+}
+
+.hero p{
+margin:0;
+color:var(--muted);
+}
+
+.kpis{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:15px;
+margin-bottom:18px;
+}
+
+.card{
+background:var(--card);
+border:1px solid var(--line);
+border-radius:18px;
+padding:20px;
+}
+
+.kpi-label{
+color:var(--muted);
+font-size:12px;
+}
+
+.kpi-value{
+font-size:27px;
+font-weight:900;
+margin-top:8px;
+}
+
+.kpi-red{
+color:var(--red);
+}
+
+.progress{
+height:9px;
+background:var(--line);
+border-radius:10px;
+overflow:hidden;
+margin-top:12px;
+}
+
+.progress span{
+display:block;
+height:100%;
+background:var(--red);
+width:0;
+transition:1s;
+}
+
+.charts{
+display:grid;
+grid-template-columns:2fr 1fr;
+gap:18px;
+margin-bottom:18px;
+}
+
+.chartbox{
+height:360px;
+}
+
+.chartbox canvas{
+width:100% !important;
+height:100% !important;
+}
+
+.week-grid{
+display:grid;
+grid-template-columns:repeat(7,1fr);
+gap:10px;
+}
+
+.day{
+background:var(--card);
+border:1px solid var(--line);
+border-radius:14px;
+padding:14px;
+text-align:center;
+}
+
+.day-name{
+font-size:11px;
+color:var(--muted);
+}
+
+.day-date{
+font-size:12px;
+margin:6px 0;
+}
+
+.day-value{
+font-size:16px;
+font-weight:900;
+}
+
+.loading{
+padding:50px;
+text-align:center;
+color:var(--muted);
+}
+
+.status{
+display:inline-block;
+padding:6px 10px;
+border-radius:20px;
+font-size:11px;
+font-weight:800;
+margin-top:10px;
+background:var(--line);
+}
+
+.footer{
+text-align:center;
+color:var(--muted);
+padding:35px;
+}
+
+@media(max-width:1000px){
+
+.kpis{
+grid-template-columns:repeat(2,1fr);
+}
+
+.charts{
+grid-template-columns:1fr;
+}
+
+.week-grid{
+grid-template-columns:repeat(4,1fr);
+}
+
+}
+
+@media(max-width:600px){
+
+.kpis{
+grid-template-columns:1fr;
+}
+
+.week-grid{
+grid-template-columns:repeat(2,1fr);
+}
+
+.header{
+flex-wrap:wrap;
+}
+
+.wrap{
+padding:14px;
+}
+
+.logo{
+width:120px;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+<header class="header">
+
+<div class="brand">
+
+<div class="logo-box">
+
+<img
+class="logo"
+src="https://modinaautopartsltd.com/_next/static/media/logo.40df2f61.svg"
+alt="Modina Auto Parts Ltd">
+
+</div>
+
+<div>
+
+<div class="title">
+MAPL SALES
+</div>
+
+<div class="sub">
+Management Dashboard
+</div>
+
+</div>
+
+</div>
+
+
+<div class="actions">
+
+<button
+class="btn"
+onclick="toggleTheme()">
+☾ / ☀
+</button>
+
+<button
+class="btn"
+onclick="loadDashboard()">
+Refresh
+</button>
+
+<a
+class="btn primary"
+href="login.html">
+Admin
+</a>
+
+</div>
+
+</header>
+
+
+<main class="wrap">
+
+
+<div class="hero">
+
+<h1>
+Sales Performance Dashboard
+</h1>
+
+<p>
+Real-time sales, target and performance overview
+</p>
+
+</div>
+
+
+<section class="kpis">
+
+
+<div class="card">
+
+<div class="kpi-label">
+CURRENT MONTH SALES
+</div>
+
+<div
+class="kpi-value"
+id="monthSales">
+৳ 0
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="kpi-label">
+MONTHLY TARGET
+</div>
+
+<div
+class="kpi-value"
+id="monthlyTarget">
+৳ 0
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="kpi-label">
+ACHIEVEMENT
+</div>
+
+<div
+class="kpi-value kpi-red"
+id="achievement">
+0%
+</div>
+
+<div class="progress">
+<span id="progress"></span>
+</div>
+
+<div
+class="status"
+id="status">
+Loading...
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="kpi-label">
+REMAINING TARGET
+</div>
+
+<div
+class="kpi-value"
+id="remaining">
+৳ 0
+</div>
+
+</div>
+
+</section>
+
+
+<section class="kpis">
+
+
+<div class="card">
+
+<div class="kpi-label">
+AVERAGE DAILY SALES
+</div>
+
+<div
+class="kpi-value"
+id="avgDaily">
+৳ 0
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="kpi-label">
+HIGHEST SALES DAY
+</div>
+
+<div
+class="kpi-value"
+id="highest">
+৳ 0
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="kpi-label">
+LOWEST SALES DAY
+</div>
+
+<div
+class="kpi-value"
+id="lowest">
+৳ 0
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="kpi-label">
+YEARLY SALES
+</div>
+
+<div
+class="kpi-value"
+id="yearlySales">
+৳ 0
+</div>
+
+</div>
+
+</section>
+
+
+<section class="charts">
+
+
+<div class="card chartbox">
+
+<h3>
+Sales Trend
+</h3>
+
+<canvas id="salesChart"></canvas>
+
+</div>
+
+
+<div class="card chartbox">
+
+<h3>
+Target vs Achievement
+</h3>
+
+<canvas id="targetChart"></canvas>
+
+</div>
+
+</section>
+
+
+<div class="card">
+
+<h3>
+Last 7 Days Sales
+</h3>
+
+<div
+class="week-grid"
+id="weekGrid">
+
+<div class="loading">
+Loading...
+</div>
+
+</div>
+
+</div>
+
+
+</main>
+
+
+<footer class="footer">
+
+© Modina Auto Parts Ltd. — MAPL Sales Management
+
+</footer>
+
+
+<script>
+
+const API =
+'https://script.google.com/macros/s/AKfycbwhxfiAWIR-KngUq8ml0l2x7RHhb8ZCjUT3DEMx5KgGHTercGwUZhhwp5sK3cWGkoK4/exec';
+
+
+let salesChart = null;
+let targetChart = null;
+
+
+/* THEME */
+
+function toggleTheme(){
+
+document.documentElement.classList.toggle('dark');
+
+localStorage.setItem(
+'MAPL_THEME',
+document.documentElement.classList.contains('dark')
+? 'dark'
+: 'light'
+);
+
+}
+
+
+(function(){
+
+if(
+localStorage.getItem('MAPL_THEME') === 'dark'
+){
+document.documentElement.classList.add('dark');
+}
+
+})();
+
+
+/* API */
+
+function api(params){
+
+return new Promise(function(resolve,reject){
+
+const callback =
+'cb_' +
+Date.now() +
+'_' +
+Math.random()
+.toString(36)
+.substring(2);
+
+
+window[callback] =
+function(data){
+
+cleanup();
+
+resolve(data);
+
+};
+
+
+const script =
+document.createElement('script');
+
+
+const query =
+new URLSearchParams(params);
+
+
+query.set(
+'callback',
+callback
+);
+
+
+script.src =
+API +
+'?' +
+query.toString();
+
+
+script.onerror =
+function(){
+
+cleanup();
+
+reject(
+new Error(
+'Unable to connect to server.'
+)
+);
+
+};
+
+
+document.body.appendChild(script);
+
+
+const timer =
+setTimeout(function(){
+
+cleanup();
+
+reject(
+new Error(
+'Server timeout.'
+)
+);
+
+},15000);
+
+
+function cleanup(){
+
+clearTimeout(timer);
+
+delete window[callback];
+
+script.remove();
+
+}
+
+});
+
+}
+
+
+/* MONEY */
+
+function money(n){
+
+return '৳ ' +
+Number(n || 0)
+.toLocaleString(
+'en-US',
+{
+maximumFractionDigits:0
+}
+);
+
+}
+
+
+/* LOAD */
+
+async function loadDashboard(){
+
+try{
+
+const response =
+await api({
+action:'dashboard'
+});
+
+
+if(!response.ok){
+
+throw new Error(
+response.message
+);
+
+}
+
+
+render(response);
+
+
+}catch(error){
+
+console.error(error);
+
+}
+
+}
+
+
+/* RENDER */
+
+function render(data){
+
+const targets =
+data.targets || {};
+
+
+document
+.getElementById('monthSales')
+.textContent =
+money(
+data.currentMonthSales
+);
+
+
+document
+.getElementById('monthlyTarget')
+.textContent =
+money(
+targets.monthly
+);
+
+
+document
+.getElementById('achievement')
+.textContent =
+Number(data.achievement || 0)
+.toFixed(2) +
+'%';
+
+
+document
+.getElementById('remaining')
+.textContent =
+money(
+data.remaining
+);
+
+
+document
+.getElementById('avgDaily')
+.textContent =
+money(
+data.avgDaily
+);
+
+
+document
+.getElementById('yearlySales')
+.textContent =
+money(
+data.yearlyTotal
+);
+
+
+document
+.getElementById('highest')
+.textContent =
+data.highest
+? money(data.highest.amount)
+: '৳ 0';
+
+
+document
+.getElementById('lowest')
+.textContent =
+data.lowest
+? money(data.lowest.amount)
+: '৳ 0';
+
+
+const progress =
+Math.min(
+Number(data.achievement || 0),
+100
+);
+
+
+document
+.getElementById('progress')
+.style.width =
+progress +
+'%';
+
+
+const status =
+document.getElementById('status');
+
+
+if(data.achievement >= 100){
+
+status.textContent =
+'Target Achieved';
+
+}else if(data.achievement >= 75){
+
+status.textContent =
+'Good Progress';
+
+}else if(data.achievement >= 50){
+
+status.textContent =
+'Needs Attention';
+
+}else{
+
+status.textContent =
+'Below Target';
+
+}
+
+
+renderCharts(data);
+
+renderWeek(data.weekly || []);
+
+}
+
+
+/* CHARTS */
+
+function renderCharts(data){
+
+const trend =
+data.monthlyTrend || [];
+
+
+const labels =
+trend.map(
+x => x.month
+);
+
+
+const values =
+trend.map(
+x => x.amount
+);
+
+
+if(salesChart){
+salesChart.destroy();
+}
+
+
+salesChart =
+new Chart(
+document.getElementById('salesChart'),
+{
+
+type:'line',
+
+data:{
+
+labels:labels,
+
+datasets:[{
+
+label:'Sales',
+
+data:values,
+
+borderWidth:3,
+
+tension:.35,
+
+fill:false
+
+}]
+
+},
+
+options:{
+
+responsive:true,
+
+maintainAspectRatio:false,
+
+plugins:{
+
+legend:{
+display:true
+}
+
+},
+
+scales:{
+
+y:{
+
+beginAtZero:true,
+
+ticks:{
+
+callback:function(value){
+return '৳ ' +
+Number(value)
+.toLocaleString();
+}
+
+}
+
+}
+
+}
+
+}
+
+}
+);
+
+
+if(targetChart){
+targetChart.destroy();
+}
+
+
+targetChart =
+new Chart(
+document.getElementById('targetChart'),
+{
+
+type:'doughnut',
+
+data:{
+
+labels:[
+'Current Sales',
+'Remaining'
+],
+
+datasets:[{
+
+data:[
+
+Number(data.currentMonthSales || 0),
+
+Number(data.remaining || 0)
+
+],
+
+borderWidth:0
+
+}]
+
+},
+
+options:{
+
+responsive:true,
+
+maintainAspectRatio:false,
+
+plugins:{
+
+legend:{
+position:'bottom'
+}
+
+}
+
+}
+
+}
+);
+
+}
+
+
+/* WEEK */
+
+function renderWeek(week){
+
+const box =
+document.getElementById('weekGrid');
+
+
+if(!week.length){
+
+box.innerHTML =
+'<div class="loading">No data available</div>';
+
+return;
+
+}
+
+
+box.innerHTML =
+week.map(function(day){
+
+return `
+
+<div class="day">
+
+<div class="day-name">
+${escapeHTML(day.weekday)}
+</div>
+
+<div class="day-date">
+${escapeHTML(day.displayDate)}
+</div>
+
+<div class="day-value">
+${money(day.amount)}
+</div>
+
+</div>
+
+`;
+
+}).join('');
+
+}
+
+
+function escapeHTML(value){
+
+return String(value ?? '')
+.replace(/&/g,'&amp;')
+.replace(/</g,'&lt;')
+.replace(/>/g,'&gt;')
+.replace(/"/g,'&quot;')
+.replace(/'/g,'&#039;');
+
+}
+
+
+/* START */
+
+loadDashboard();
+
+</script>
+
+</body>
+
+</html>
