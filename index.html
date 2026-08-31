@@ -3,9 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+
 <title>MAPL Sales Management</title>
 
 <style>
+
 :root{
   --bg:#f4f6f8;
   --card:#ffffff;
@@ -13,6 +15,7 @@
   --muted:#667085;
   --line:#dfe4ea;
   --red:#e51d2a;
+  --shadow:0 10px 30px rgba(16,24,40,.06);
 }
 
 html.dark{
@@ -21,17 +24,29 @@ html.dark{
   --text:#f5f7fa;
   --muted:#96a3b3;
   --line:#293543;
+  --shadow:0 10px 30px rgba(0,0,0,.25);
 }
 
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+}
 
 body{
   margin:0;
   background:var(--bg);
   color:var(--text);
-  font-family:Inter,Segoe UI,Arial;
-  transition:.25s;
+  font-family:Inter,Segoe UI,Arial,sans-serif;
+  transition:.25s ease;
 }
+
+
+/* =========================
+   HEADER
+========================= */
 
 .header{
   min-height:76px;
@@ -40,12 +55,22 @@ body{
   display:flex;
   align-items:center;
   justify-content:space-between;
+  gap:20px;
+  background:var(--bg);
+  position:relative;
+  z-index:10;
 }
+
+
+/* =========================
+   BRAND
+========================= */
 
 .brand{
   display:flex;
   align-items:center;
   gap:12px;
+  min-width:0;
 }
 
 .logo-box{
@@ -54,6 +79,8 @@ body{
   padding:5px 10px;
   display:flex;
   align-items:center;
+  justify-content:center;
+  box-shadow:0 3px 12px rgba(0,0,0,.06);
 }
 
 .logo{
@@ -64,17 +91,35 @@ body{
 
 .title{
   font-weight:900;
+  font-size:15px;
+  letter-spacing:.5px;
+  white-space:nowrap;
 }
 
 .subtitle{
   color:var(--muted);
   font-size:11px;
+  margin-top:2px;
+  white-space:nowrap;
 }
+
+
+/* =========================
+   HEADER ACTIONS
+========================= */
 
 .actions{
   display:flex;
+  align-items:center;
+  justify-content:flex-end;
   gap:8px;
+  flex-wrap:wrap;
 }
+
+
+/* =========================
+   COMMON BUTTON
+========================= */
 
 button,
 a{
@@ -85,24 +130,102 @@ a{
   padding:10px 14px;
   text-decoration:none;
   cursor:pointer;
+  font-family:inherit;
+  font-size:14px;
+  transition:.25s ease;
 }
+
+button:hover,
+a:hover{
+  transform:translateY(-2px);
+  box-shadow:0 6px 18px rgba(0,0,0,.08);
+}
+
+
+/* =========================
+   PRIMARY BUTTON
+========================= */
 
 .primary{
   background:var(--red);
   border-color:var(--red);
   color:#fff;
+  font-weight:700;
 }
+
+.primary:hover{
+  background:#c91420;
+  border-color:#c91420;
+  color:#fff;
+}
+
+
+/* =========================
+   TVS DASHBOARD BUTTON
+========================= */
+
+.tvs-btn{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+
+  min-width:112px;
+  height:58px;
+
+  padding:5px 10px;
+
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:10px;
+
+  color:var(--text);
+  text-decoration:none;
+
+  transition:.25s ease;
+
+  box-shadow:none;
+}
+
+.tvs-btn:hover{
+  border-color:#e51d2a;
+  transform:translateY(-2px);
+  box-shadow:0 7px 20px rgba(0,0,0,.10);
+}
+
+.tvs-logo{
+  width:62px;
+  height:23px;
+  object-fit:contain;
+  display:block;
+}
+
+.tvs-text{
+  font-size:9px;
+  font-weight:800;
+  letter-spacing:.2px;
+  white-space:nowrap;
+  margin-top:2px;
+}
+
+
+/* =========================
+   HERO
+========================= */
 
 .hero{
   max-width:1200px;
   margin:auto;
-  padding:80px 22px;
+  padding:80px 22px 65px;
   text-align:center;
 }
 
 .hero h1{
   font-size:clamp(34px,6vw,68px);
-  margin:0 0 15px;
+  line-height:1.05;
+  margin:0 0 18px;
+  font-weight:900;
+  letter-spacing:-1.5px;
 }
 
 .hero p{
@@ -110,12 +233,26 @@ a{
   max-width:700px;
   margin:auto;
   line-height:1.7;
+  font-size:15px;
 }
+
+.hero-action{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  margin-top:25px;
+}
+
+
+/* =========================
+   CARDS
+========================= */
 
 .grid{
   max-width:1100px;
-  margin:30px auto;
+  margin:10px auto 45px;
   padding:0 22px;
+
   display:grid;
   grid-template-columns:repeat(3,1fr);
   gap:18px;
@@ -126,74 +263,252 @@ a{
   border:1px solid var(--line);
   border-radius:18px;
   padding:25px;
+
+  box-shadow:var(--shadow);
+
+  transition:.25s ease;
+}
+
+.card:hover{
+  transform:translateY(-5px);
+  box-shadow:0 15px 35px rgba(16,24,40,.10);
 }
 
 .card h3{
   margin-top:0;
+  margin-bottom:10px;
+  font-size:18px;
 }
 
 .card p{
   color:var(--muted);
   line-height:1.6;
+  font-size:14px;
+  margin-bottom:20px;
 }
+
+.card a{
+  display:inline-block;
+  font-size:13px;
+  padding:9px 13px;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
 
 .footer{
   text-align:center;
   color:var(--muted);
-  padding:40px;
+  padding:40px 20px;
+  font-size:12px;
+  border-top:1px solid var(--line);
 }
+
+
+/* =========================
+   MOBILE
+========================= */
 
 @media(max-width:800px){
-  .grid{
-    grid-template-columns:1fr;
-  }
 
   .header{
-    flex-wrap:wrap;
-    gap:12px;
+    padding:12px 18px;
+    flex-direction:column;
+    align-items:stretch;
   }
+
+  .brand{
+    justify-content:center;
+  }
+
+  .actions{
+    justify-content:center;
+  }
+
+  .grid{
+    grid-template-columns:1fr;
+    max-width:550px;
+  }
+
+  .hero{
+    padding:65px 20px 50px;
+  }
+
 }
+
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media(max-width:480px){
+
+  .logo{
+    width:115px;
+    height:36px;
+  }
+
+  .title{
+    font-size:13px;
+  }
+
+  .subtitle{
+    font-size:9px;
+  }
+
+  .actions{
+    gap:6px;
+  }
+
+  button,
+  .actions > a:not(.tvs-btn){
+    padding:9px 10px;
+    font-size:12px;
+  }
+
+  .tvs-btn{
+    min-width:100px;
+    height:54px;
+  }
+
+  .tvs-logo{
+    width:55px;
+    height:20px;
+  }
+
+  .tvs-text{
+    font-size:8px;
+  }
+
+  .hero h1{
+    font-size:40px;
+  }
+
+}
+
+
+/* =========================
+   DARK MODE TVS LOGO SUPPORT
+========================= */
+
+html.dark .tvs-btn{
+  background:#111820;
+}
+
 </style>
 </head>
 
+
 <body>
+
+
+<!-- =====================================
+     HEADER
+===================================== -->
 
 <header class="header">
 
+  <!-- BRAND -->
   <div class="brand">
 
     <div class="logo-box">
+
       <img
         class="logo"
         src="https://modinaautopartsltd.com/_next/static/media/logo.40df2f61.svg"
         alt="Modina Auto Parts Ltd">
+
     </div>
 
     <div>
-      <div class="title">MAPL SALES</div>
-      <div class="subtitle">Sales & Performance Management</div>
+
+      <div class="title">
+        MAPL SALES
+      </div>
+
+      <div class="subtitle">
+        Sales & Performance Management
+      </div>
+
     </div>
 
   </div>
 
+
+  <!-- ACTION BUTTONS -->
   <div class="actions">
 
-    <button onclick="toggleTheme()">☾ / ☀</button>
+
+    <!-- DARK / LIGHT MODE -->
+
+    <button
+      onclick="toggleTheme()"
+      title="Toggle Dark / Light Mode"
+      aria-label="Toggle Dark / Light Mode">
+
+      ☾ / ☀
+
+    </button>
+
+
+    <!-- =================================
+         TVS DASHBOARD
+    ================================== -->
+
+    <a
+      class="tvs-btn"
+      href="https://rakib-mapl-database.github.io/tvs"
+      target="_blank"
+      rel="noopener noreferrer"
+      title="Enter TVS Sales Dashboard">
+
+
+      <img
+        class="tvs-logo"
+        src="https://www.tvsmotor.com/-/media/Feature/Header/TVSLogo-hr.svg"
+        alt="TVS Motor">
+
+
+      <span class="tvs-text">
+        Enter to Dashboard
+      </span>
+
+
+    </a>
+
+
+    <!-- MAPL DASHBOARD -->
 
     <a
       class="primary"
       href="dashboard.html">
+
       Dashboard
+
     </a>
 
-    <a href="login.html">
+
+    <!-- ADMIN LOGIN -->
+
+    <a
+      href="login.html">
+
       Admin Login
+
     </a>
+
 
   </div>
 
 </header>
 
+
+
+<!-- =====================================
+     HERO
+===================================== -->
 
 <section class="hero">
 
@@ -201,73 +516,132 @@ a{
     Sales Intelligence
   </h1>
 
+
   <p>
     Advanced sales monitoring, target tracking,
     performance analysis and management reporting
     for Modina Auto Parts Ltd.
   </p>
 
-  <br>
 
   <a
-    class="primary"
+    class="primary hero-action"
     href="dashboard.html">
+
     View Sales Dashboard →
+
   </a>
 
 </section>
 
 
+
+<!-- =====================================
+     FEATURE CARDS
+===================================== -->
+
 <section class="grid">
 
+
+  <!-- SALES DASHBOARD -->
+
   <div class="card">
-    <h3>📊 Sales Dashboard</h3>
+
+    <h3>
+      📊 Sales Dashboard
+    </h3>
+
     <p>
       View current sales, target achievement,
       trends and management KPIs.
     </p>
-    <a href="dashboard.html">
+
+    <a
+      href="dashboard.html">
+
       Open Dashboard
+
     </a>
+
   </div>
 
 
+
+  <!-- TARGET MANAGEMENT -->
+
   <div class="card">
-    <h3>🎯 Target Management</h3>
+
+    <h3>
+      🎯 Target Management
+    </h3>
+
     <p>
       Monthly, yearly and daily sales targets
       are managed securely.
     </p>
+
   </div>
 
 
+
+  <!-- ADMIN PANEL -->
+
   <div class="card">
-    <h3>🔐 Admin Panel</h3>
+
+    <h3>
+      🔐 Admin Panel
+    </h3>
+
     <p>
       Authorized administrators can add,
       edit and delete sales records.
     </p>
-    <a href="login.html">
+
+    <a
+      href="login.html">
+
       Admin Login
+
     </a>
+
   </div>
+
 
 </section>
 
 
+
+<!-- =====================================
+     FOOTER
+===================================== -->
+
 <footer class="footer">
+
   © Modina Auto Parts Ltd. — MAPL Sales Management
+
 </footer>
 
 
+
+<!-- =====================================
+     JAVASCRIPT
+===================================== -->
+
 <script>
+
+
+/* =====================================
+   DARK / LIGHT MODE
+===================================== */
 
 function toggleTheme(){
 
   document.documentElement.classList.toggle('dark');
 
+
   localStorage.setItem(
     'MAPL_THEME',
+
     document.documentElement.classList.contains('dark')
       ? 'dark'
       : 'light'
@@ -275,17 +649,25 @@ function toggleTheme(){
 
 }
 
+
+/* =====================================
+   LOAD SAVED THEME
+===================================== */
+
 (function(){
 
   if(
     localStorage.getItem('MAPL_THEME') === 'dark'
   ){
+
     document.documentElement.classList.add('dark');
+
   }
 
 })();
 
 </script>
+
 
 </body>
 </html>
