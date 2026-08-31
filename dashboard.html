@@ -89,6 +89,44 @@ display:flex;
 gap:8px;
 }
 
+.tvs-btn{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:2px;
+  min-width:112px;
+  height:58px;
+  padding:5px 10px;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:10px;
+  color:var(--text);
+  text-decoration:none;
+  cursor:pointer;
+  transition:.25s ease;
+}
+
+.tvs-btn:hover{
+  border-color:var(--red);
+  transform:translateY(-2px);
+  box-shadow:0 7px 20px rgba(0,0,0,.10);
+}
+
+.tvs-logo{
+  width:62px;
+  height:23px;
+  object-fit:contain;
+  display:block;
+}
+
+.tvs-text{
+  font-size:9px;
+  font-weight:800;
+  letter-spacing:.2px;
+  white-space:nowrap;
+}
+
 .btn{
 border:1px solid var(--line);
 background:var(--card);
@@ -255,6 +293,20 @@ grid-template-columns:repeat(4,1fr);
 
 @media(max-width:600px){
 
+  .tvs-btn{
+    min-width:100px;
+    height:54px;
+  }
+
+  .tvs-logo{
+    width:55px;
+    height:20px;
+  }
+
+  .tvs-text{
+    font-size:8px;
+  }
+
 .kpis{
 grid-template-columns:1fr;
 }
@@ -319,6 +371,24 @@ class="btn"
 onclick="toggleTheme()">
 ☾ / ☀
 </button>
+
+<a
+  class="tvs-btn"
+  href="https://rakib-mapl-database.github.io/tvs"
+  target="_blank"
+  rel="noopener noreferrer"
+  title="Enter TVS Sales Dashboard">
+
+  <img
+    class="tvs-logo"
+    src="https://www.tvsmotor.com/-/media/Feature/Header/TVSLogo-hr.svg"
+    alt="TVS Motor">
+
+  <span class="tvs-text">
+    Enter to Dashboard
+  </span>
+
+</a>
 
 <button
 class="btn"
@@ -499,7 +569,7 @@ id="yearlySales">
 <div class="card chartbox">
 
 <h3>
-Sales Trend
+Monthly Sales Trend
 </h3>
 
 <canvas id="salesChart"></canvas>
