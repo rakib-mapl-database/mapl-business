@@ -1,463 +1,1423 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-
-<title>MAPL Sales Management</title>
-
-<style>
-
-:root{
-  --bg:#f4f6f8;
-  --card:#ffffff;
-  --text:#111827;
-  --muted:#667085;
-  --line:#dfe4ea;
-  --red:#e51d2a;
-  --shadow:0 10px 30px rgba(16,24,40,.06);
-}
-
-html.dark{
-  --bg:#070a0f;
-  --card:#101720;
-  --text:#f5f7fa;
-  --muted:#96a3b3;
-  --line:#293543;
-  --shadow:0 10px 30px rgba(0,0,0,.25);
-}
-
-*{
-  box-sizing:border-box;
-}
-
-html{
-  scroll-behavior:smooth;
-}
-
-body{
-  margin:0;
-  background:var(--bg);
-  color:var(--text);
-  font-family:Inter,Segoe UI,Arial,sans-serif;
-  transition:.25s ease;
-}
-
-
-/* =========================
-   HEADER
-========================= */
-
-.header{
-  min-height:76px;
-  padding:12px 5%;
-  border-bottom:1px solid var(--line);
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:20px;
-  background:var(--bg);
-  position:relative;
-  z-index:10;
-}
-
-
-/* =========================
-   BRAND
-========================= */
-
-.brand{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  min-width:0;
-}
-
-.logo-box{
-  background:#fff;
-  border-radius:10px;
-  padding:5px 10px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  box-shadow:0 3px 12px rgba(0,0,0,.06);
-}
-
-.logo{
-  width:145px;
-  height:42px;
-  object-fit:contain;
-}
-
-.title{
-  font-weight:900;
-  font-size:15px;
-  letter-spacing:.5px;
-  white-space:nowrap;
-}
-
-.subtitle{
-  color:var(--muted);
-  font-size:11px;
-  margin-top:2px;
-  white-space:nowrap;
-}
-
-
-/* =========================
-   HEADER ACTIONS
-========================= */
-
-.actions{
-  display:flex;
-  align-items:center;
-  justify-content:flex-end;
-  gap:8px;
-  flex-wrap:wrap;
-}
-
-
-/* =========================
-   COMMON BUTTON
-========================= */
-
-button,
-a{
-  border:1px solid var(--line);
-  background:var(--card);
-  color:var(--text);
-  border-radius:10px;
-  padding:10px 14px;
-  text-decoration:none;
-  cursor:pointer;
-  font-family:inherit;
-  font-size:14px;
-  transition:.25s ease;
-}
-
-button:hover,
-a:hover{
-  transform:translateY(-2px);
-  box-shadow:0 6px 18px rgba(0,0,0,.08);
-}
-
-
-/* =========================
-   PRIMARY BUTTON
-========================= */
-
-.primary{
-  background:var(--red);
-  border-color:var(--red);
-  color:#fff;
-  font-weight:700;
-}
-
-.primary:hover{
-  background:#c91420;
-  border-color:#c91420;
-  color:#fff;
-}
-
-
-/* =========================
-   TVS DASHBOARD BUTTON
-========================= */
-
-.tvs-btn{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-
-  min-width:112px;
-  height:58px;
-
-  padding:5px 10px;
-
-  background:var(--card);
-  border:1px solid var(--line);
-  border-radius:10px;
-
-  color:var(--text);
-  text-decoration:none;
-
-  transition:.25s ease;
-
-  box-shadow:none;
-}
-
-.tvs-btn:hover{
-  border-color:#e51d2a;
-  transform:translateY(-2px);
-  box-shadow:0 7px 20px rgba(0,0,0,.10);
-}
-
-.tvs-logo{
-  width:62px;
-  height:23px;
-  object-fit:contain;
-  display:block;
-}
-
-.tvs-text{
-  font-size:9px;
-  font-weight:800;
-  letter-spacing:.2px;
-  white-space:nowrap;
-  margin-top:2px;
-}
-
-
-/* =========================
-   HERO
-========================= */
-
-.hero{
-  max-width:1200px;
-  margin:auto;
-  padding:80px 22px 65px;
-  text-align:center;
-}
-
-.hero h1{
-  font-size:clamp(34px,6vw,68px);
-  line-height:1.05;
-  margin:0 0 18px;
-  font-weight:900;
-  letter-spacing:-1.5px;
-}
-
-.hero p{
-  color:var(--muted);
-  max-width:700px;
-  margin:auto;
-  line-height:1.7;
-  font-size:15px;
-}
-
-.hero-action{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  margin-top:25px;
-}
-
-
-/* =========================
-   CARDS
-========================= */
-
-.grid{
-  max-width:1100px;
-  margin:10px auto 45px;
-  padding:0 22px;
-
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:18px;
-}
-
-.card{
-  background:var(--card);
-  border:1px solid var(--line);
-  border-radius:18px;
-  padding:25px;
-
-  box-shadow:var(--shadow);
-
-  transition:.25s ease;
-}
-
-.card:hover{
-  transform:translateY(-5px);
-  box-shadow:0 15px 35px rgba(16,24,40,.10);
-}
-
-.card h3{
-  margin-top:0;
-  margin-bottom:10px;
-  font-size:18px;
-}
-
-.card p{
-  color:var(--muted);
-  line-height:1.6;
-  font-size:14px;
-  margin-bottom:20px;
-}
-
-.card a{
-  display:inline-block;
-  font-size:13px;
-  padding:9px 13px;
-}
-
-
-/* =========================
-   FOOTER
-========================= */
-
-.footer{
-  text-align:center;
-  color:var(--muted);
-  padding:40px 20px;
-  font-size:12px;
-  border-top:1px solid var(--line);
-}
-
-
-/* =========================
-   MOBILE
-========================= */
-
-@media(max-width:800px){
-
-  .header{
-    padding:12px 18px;
-    flex-direction:column;
-    align-items:stretch;
-  }
-
-  .brand{
-    justify-content:center;
-  }
-
-  .actions{
-    justify-content:center;
-  }
-
-  .grid{
-    grid-template-columns:1fr;
-    max-width:550px;
-  }
-
-  .hero{
-    padding:65px 20px 50px;
-  }
-
-}
-
-
-/* =========================
-   SMALL MOBILE
-========================= */
-
-@media(max-width:480px){
-
-  .logo{
-    width:115px;
-    height:36px;
-  }
-
-  .title{
-    font-size:13px;
-  }
-
-  .subtitle{
-    font-size:9px;
-  }
-
-  .actions{
-    gap:6px;
-  }
-
-  button,
-  .actions > a:not(.tvs-btn){
-    padding:9px 10px;
-    font-size:12px;
-  }
-
-  .tvs-btn{
-    min-width:100px;
-    height:54px;
-  }
-
-  .tvs-logo{
-    width:55px;
-    height:20px;
-  }
-
-  .tvs-text{
-    font-size:8px;
-  }
-
-  .hero h1{
-    font-size:40px;
-  }
-
-}
-
-
-/* =========================
-   DARK MODE TVS LOGO SUPPORT
-========================= */
-
-html.dark .tvs-btn{
-  background:#111820;
-}
-
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MAPL Sales Analysis | Management System</title>
+
+    <meta
+        name="description"
+        content="Modina Auto Parts Ltd. Sales Analysis and Management System"
+    >
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --red: #e51d2a;
+            --red-dark: #c91521;
+            --black: #090909;
+            --black-2: #111111;
+            --black-3: #181818;
+            --white: #ffffff;
+            --text: #171717;
+            --muted: #707070;
+            --border: #e8e8e8;
+            --light: #f7f7f7;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: "Inter", sans-serif;
+            background: #ffffff;
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        button {
+            font-family: inherit;
+        }
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 78px;
+            z-index: 1000;
+
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+
+            border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+        }
+
+        .header-container {
+            width: min(1200px, calc(100% - 40px));
+            height: 100%;
+            margin: auto;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-box {
+            width: 48px;
+            height: 48px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 5px;
+
+            box-shadow: 0 3px 14px rgba(0, 0, 0, 0.08);
+        }
+
+        .logo-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .brand-text strong {
+            display: block;
+            font-size: 15px;
+            font-weight: 800;
+            letter-spacing: -0.3px;
+        }
+
+        .brand-text span {
+            display: block;
+            margin-top: 2px;
+
+            color: #777;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .nav a {
+            color: #444;
+            font-size: 13px;
+            font-weight: 600;
+
+            transition: 0.25s ease;
+        }
+
+        .nav a:hover {
+            color: var(--red);
+        }
+
+        .login-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            min-width: 118px;
+            height: 42px;
+
+            padding: 0 20px;
+
+            background: var(--red);
+            color: #ffffff;
+
+            border-radius: 8px;
+
+            font-size: 13px;
+            font-weight: 700;
+
+            box-shadow: 0 7px 18px rgba(229, 29, 42, 0.22);
+
+            transition: 0.25s ease;
+        }
+
+        .login-btn:hover {
+            background: var(--red-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 10px 24px rgba(229, 29, 42, 0.28);
+        }
+
+        .mobile-menu {
+            display: none;
+
+            width: 42px;
+            height: 42px;
+
+            border: 1px solid #ddd;
+            border-radius: 8px;
+
+            background: #fff;
+            cursor: pointer;
+        }
+
+        .mobile-menu span {
+            display: block;
+            width: 19px;
+            height: 2px;
+            margin: 4px auto;
+
+            background: #222;
+        }
+
+        /* =========================
+           HERO
+        ========================= */
+
+        .hero {
+            min-height: 100vh;
+            padding-top: 78px;
+
+            position: relative;
+            overflow: hidden;
+
+            background:
+                radial-gradient(
+                    circle at 85% 20%,
+                    rgba(229, 29, 42, 0.10),
+                    transparent 30%
+                ),
+                linear-gradient(
+                    135deg,
+                    #ffffff 0%,
+                    #ffffff 52%,
+                    #fafafa 100%
+                );
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+
+            width: 500px;
+            height: 500px;
+
+            right: -230px;
+            top: 140px;
+
+            border: 1px solid rgba(229, 29, 42, 0.08);
+            border-radius: 50%;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+
+            width: 360px;
+            height: 360px;
+
+            right: -150px;
+            top: 210px;
+
+            border: 1px solid rgba(229, 29, 42, 0.08);
+            border-radius: 50%;
+        }
+
+        .hero-container {
+            width: min(1200px, calc(100% - 40px));
+            min-height: calc(100vh - 78px);
+
+            margin: auto;
+
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            align-items: center;
+
+            gap: 70px;
+
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-content {
+            padding: 70px 0;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+
+            padding: 8px 13px;
+
+            background: rgba(229, 29, 42, 0.07);
+            color: var(--red);
+
+            border-radius: 50px;
+
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.9px;
+            text-transform: uppercase;
+        }
+
+        .eyebrow-dot {
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+            background: var(--red);
+        }
+
+        .hero h1 {
+            margin-top: 23px;
+
+            max-width: 700px;
+
+            font-size: clamp(42px, 5vw, 68px);
+            line-height: 1.04;
+
+            letter-spacing: -3px;
+            font-weight: 800;
+        }
+
+        .hero h1 span {
+            color: var(--red);
+        }
+
+        .hero-description {
+            max-width: 600px;
+
+            margin-top: 24px;
+
+            color: #666;
+
+            font-size: 16px;
+            line-height: 1.8;
+        }
+
+        .hero-actions {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+
+            margin-top: 34px;
+        }
+
+        .primary-btn,
+        .secondary-btn {
+            min-height: 50px;
+
+            padding: 0 24px;
+
+            border-radius: 8px;
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 13px;
+            font-weight: 700;
+
+            transition: 0.25s ease;
+        }
+
+        .primary-btn {
+            background: var(--red);
+            color: #fff;
+
+            box-shadow: 0 10px 25px rgba(229, 29, 42, 0.22);
+        }
+
+        .primary-btn:hover {
+            background: var(--red-dark);
+            transform: translateY(-2px);
+        }
+
+        .secondary-btn {
+            border: 1px solid #ddd;
+            background: #fff;
+            color: #222;
+        }
+
+        .secondary-btn:hover {
+            border-color: var(--red);
+            color: var(--red);
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 42px;
+
+            margin-top: 52px;
+            padding-top: 28px;
+
+            border-top: 1px solid #e8e8e8;
+        }
+
+        .hero-stat strong {
+            display: block;
+
+            font-size: 25px;
+            font-weight: 800;
+        }
+
+        .hero-stat span {
+            display: block;
+
+            margin-top: 5px;
+
+            color: #777;
+
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* =========================
+           DASHBOARD PREVIEW
+        ========================= */
+
+        .dashboard-preview {
+            position: relative;
+        }
+
+        .preview-window {
+            position: relative;
+
+            background: #111;
+            border-radius: 18px;
+
+            padding: 10px;
+
+            box-shadow:
+                0 35px 80px rgba(0, 0, 0, 0.20),
+                0 10px 30px rgba(229, 29, 42, 0.10);
+
+            transform: perspective(1200px) rotateY(-5deg) rotateX(2deg);
+        }
+
+        .preview-top {
+            height: 34px;
+
+            display: flex;
+            align-items: center;
+
+            padding: 0 12px;
+
+            border-radius: 10px 10px 0 0;
+
+            background: #191919;
+        }
+
+        .window-dots {
+            display: flex;
+            gap: 5px;
+        }
+
+        .window-dots i {
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+
+            background: #555;
+        }
+
+        .preview-body {
+            background: #f6f7f8;
+
+            border-radius: 0 0 11px 11px;
+
+            padding: 18px;
+        }
+
+        .preview-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 14px;
+        }
+
+        .preview-heading strong {
+            font-size: 14px;
+        }
+
+        .preview-heading span {
+            color: #888;
+            font-size: 9px;
+        }
+
+        .preview-kpis {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 9px;
+        }
+
+        .preview-kpi {
+            background: #fff;
+            border: 1px solid #eee;
+
+            border-radius: 8px;
+
+            padding: 12px;
+        }
+
+        .preview-kpi small {
+            display: block;
+
+            color: #888;
+            font-size: 8px;
+        }
+
+        .preview-kpi strong {
+            display: block;
+
+            margin-top: 7px;
+
+            font-size: 13px;
+        }
+
+        .preview-kpi.red strong {
+            color: var(--red);
+        }
+
+        .preview-chart {
+            margin-top: 10px;
+
+            height: 170px;
+
+            display: flex;
+            align-items: flex-end;
+            gap: 9px;
+
+            padding: 20px 14px 12px;
+
+            background: #fff;
+
+            border: 1px solid #eee;
+            border-radius: 8px;
+        }
+
+        .chart-bar {
+            flex: 1;
+
+            min-height: 20px;
+
+            background: linear-gradient(
+                to top,
+                var(--red),
+                #ff6c75
+            );
+
+            border-radius: 4px 4px 2px 2px;
+
+            opacity: 0.88;
+        }
+
+        .chart-bar:nth-child(1) {
+            height: 38%;
+        }
+
+        .chart-bar:nth-child(2) {
+            height: 58%;
+        }
+
+        .chart-bar:nth-child(3) {
+            height: 45%;
+        }
+
+        .chart-bar:nth-child(4) {
+            height: 72%;
+        }
+
+        .chart-bar:nth-child(5) {
+            height: 55%;
+        }
+
+        .chart-bar:nth-child(6) {
+            height: 84%;
+        }
+
+        .chart-bar:nth-child(7) {
+            height: 68%;
+        }
+
+        .preview-bottom {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+
+            gap: 10px;
+
+            margin-top: 10px;
+        }
+
+        .preview-mini {
+            height: 76px;
+
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 8px;
+
+            padding: 11px;
+        }
+
+        .preview-mini span {
+            color: #888;
+            font-size: 8px;
+        }
+
+        .progress {
+            height: 7px;
+
+            margin-top: 15px;
+
+            background: #eee;
+            border-radius: 20px;
+
+            overflow: hidden;
+        }
+
+        .progress i {
+            display: block;
+
+            width: 76%;
+            height: 100%;
+
+            background: var(--red);
+
+            border-radius: 20px;
+        }
+
+        .floating-card {
+            position: absolute;
+
+            right: -35px;
+            bottom: 35px;
+
+            width: 175px;
+
+            padding: 15px;
+
+            background: #fff;
+
+            border: 1px solid #eee;
+            border-radius: 12px;
+
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+
+            animation: floatCard 3s ease-in-out infinite;
+        }
+
+        .floating-card small {
+            color: #888;
+            font-size: 9px;
+        }
+
+        .floating-card strong {
+            display: block;
+
+            margin-top: 5px;
+
+            font-size: 18px;
+        }
+
+        .floating-card span {
+            display: block;
+
+            margin-top: 4px;
+
+            color: #159447;
+            font-size: 9px;
+            font-weight: 700;
+        }
+
+        @keyframes floatCard {
+            0%, 100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-9px);
+            }
+        }
+
+        /* =========================
+           SECTION COMMON
+        ========================= */
+
+        .section {
+            padding: 100px 0;
+        }
+
+        .section-light {
+            background: #f8f8f8;
+        }
+
+        .section-container {
+            width: min(1200px, calc(100% - 40px));
+            margin: auto;
+        }
+
+        .section-heading {
+            max-width: 680px;
+
+            margin: 0 auto 55px;
+
+            text-align: center;
+        }
+
+        .section-heading .label {
+            color: var(--red);
+
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+        }
+
+        .section-heading h2 {
+            margin-top: 13px;
+
+            font-size: clamp(30px, 4vw, 43px);
+            line-height: 1.12;
+
+            letter-spacing: -1.8px;
+        }
+
+        .section-heading p {
+            margin-top: 16px;
+
+            color: #777;
+
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        /* =========================
+           FEATURES
+        ========================= */
+
+        .features-grid {
+            display: grid;
+
+            grid-template-columns: repeat(4, 1fr);
+
+            gap: 18px;
+        }
+
+        .feature-card {
+            padding: 28px;
+
+            background: #fff;
+
+            border: 1px solid #e9e9e9;
+            border-radius: 12px;
+
+            transition: 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+
+            border-color: rgba(229, 29, 42, 0.25);
+
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.07);
+        }
+
+        .feature-icon {
+            width: 46px;
+            height: 46px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            margin-bottom: 21px;
+
+            background: rgba(229, 29, 42, 0.08);
+            color: var(--red);
+
+            border-radius: 10px;
+
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .feature-card h3 {
+            font-size: 15px;
+        }
+
+        .feature-card p {
+            margin-top: 10px;
+
+            color: #777;
+
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        /* =========================
+           ANALYTICS
+        ========================= */
+
+        .analytics-section {
+            background: #090909;
+            color: #fff;
+        }
+
+        .analytics-section .section-heading .label {
+            color: #ff5d68;
+        }
+
+        .analytics-section .section-heading h2 {
+            color: #fff;
+        }
+
+        .analytics-section .section-heading p {
+            color: #999;
+        }
+
+        .analytics-grid {
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 18px;
+        }
+
+        .analytics-card {
+            min-height: 245px;
+
+            padding: 30px;
+
+            background: #121212;
+
+            border: 1px solid #252525;
+            border-radius: 14px;
+
+            position: relative;
+            overflow: hidden;
+        }
+
+        .analytics-card::after {
+            content: "";
+
+            position: absolute;
+
+            right: -50px;
+            bottom: -80px;
+
+            width: 200px;
+            height: 200px;
+
+            border: 1px solid rgba(229, 29, 42, 0.15);
+            border-radius: 50%;
+        }
+
+        .analytics-card h3 {
+            font-size: 17px;
+        }
+
+        .analytics-card p {
+            max-width: 430px;
+
+            margin-top: 10px;
+
+            color: #888;
+
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .metric-row {
+            display: flex;
+            align-items: flex-end;
+            gap: 15px;
+
+            margin-top: 32px;
+        }
+
+        .metric-value {
+            font-size: 34px;
+            font-weight: 800;
+        }
+
+        .metric-change {
+            padding-bottom: 5px;
+
+            color: #48c978;
+
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .mini-bars {
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+
+            height: 100px;
+
+            margin-top: 15px;
+        }
+
+        .mini-bars i {
+            flex: 1;
+
+            background: var(--red);
+
+            border-radius: 4px 4px 1px 1px;
+
+            opacity: 0.85;
+        }
+
+        .mini-bars i:nth-child(1) {
+            height: 35%;
+        }
+
+        .mini-bars i:nth-child(2) {
+            height: 48%;
+        }
+
+        .mini-bars i:nth-child(3) {
+            height: 42%;
+        }
+
+        .mini-bars i:nth-child(4) {
+            height: 65%;
+        }
+
+        .mini-bars i:nth-child(5) {
+            height: 58%;
+        }
+
+        .mini-bars i:nth-child(6) {
+            height: 82%;
+        }
+
+        .mini-bars i:nth-child(7) {
+            height: 73%;
+        }
+
+        /* =========================
+           DIVISIONS
+        ========================= */
+
+        .division-grid {
+            display: grid;
+
+            grid-template-columns: repeat(4, 1fr);
+
+            gap: 12px;
+        }
+
+        .division-item {
+            padding: 20px;
+
+            border: 1px solid #e7e7e7;
+            border-radius: 10px;
+
+            background: #fff;
+        }
+
+        .division-item strong {
+            display: block;
+
+            font-size: 13px;
+        }
+
+        .division-item span {
+            display: block;
+
+            margin-top: 7px;
+
+            color: #888;
+
+            font-size: 10px;
+        }
+
+        .division-line {
+            height: 5px;
+
+            margin-top: 15px;
+
+            background: #eee;
+
+            border-radius: 20px;
+
+            overflow: hidden;
+        }
+
+        .division-line i {
+            display: block;
+
+            height: 100%;
+
+            background: var(--red);
+
+            border-radius: 20px;
+        }
+
+        /* =========================
+           CTA
+        ========================= */
+
+        .cta {
+            padding: 85px 0;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #e51d2a,
+                    #b90f1b
+                );
+
+            color: #fff;
+        }
+
+        .cta-container {
+            width: min(1000px, calc(100% - 40px));
+
+            margin: auto;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 40px;
+        }
+
+        .cta h2 {
+            max-width: 620px;
+
+            font-size: clamp(28px, 4vw, 43px);
+            line-height: 1.15;
+
+            letter-spacing: -1.5px;
+        }
+
+        .cta p {
+            margin-top: 12px;
+
+            color: rgba(255, 255, 255, 0.78);
+
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .cta-button {
+            flex-shrink: 0;
+
+            min-width: 150px;
+            height: 50px;
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            background: #fff;
+            color: var(--red);
+
+            border-radius: 8px;
+
+            font-size: 13px;
+            font-weight: 800;
+
+            transition: 0.25s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.18);
+        }
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        footer {
+            padding: 30px 0;
+
+            background: #080808;
+            color: #fff;
+        }
+
+        .footer-container {
+            width: min(1200px, calc(100% - 40px));
+
+            margin: auto;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 20px;
+        }
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .footer-logo {
+            width: 35px;
+            height: 35px;
+
+            background: #fff;
+
+            border-radius: 7px;
+            padding: 4px;
+        }
+
+        .footer-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .footer-brand span {
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .copyright {
+            color: #777;
+
+            font-size: 10px;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 1000px) {
+            .hero-container {
+                grid-template-columns: 1fr;
+
+                gap: 30px;
+
+                padding-top: 40px;
+                padding-bottom: 70px;
+            }
+
+            .hero-content {
+                text-align: center;
+                padding-bottom: 0;
+            }
+
+            .hero-description {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .hero-actions,
+            .hero-stats {
+                justify-content: center;
+            }
+
+            .dashboard-preview {
+                width: min(700px, 100%);
+                margin: auto;
+            }
+
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .division-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .floating-card {
+                right: 0;
+            }
+        }
+
+        @media (max-width: 760px) {
+            .header {
+                height: 68px;
+            }
+
+            .nav {
+                display: none;
+
+                position: absolute;
+
+                top: 68px;
+                left: 20px;
+                right: 20px;
+
+                padding: 18px;
+
+                background: #fff;
+
+                border: 1px solid #eee;
+                border-radius: 10px;
+
+                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+
+                flex-direction: column;
+                align-items: stretch;
+
+                gap: 0;
+            }
+
+            .nav.show {
+                display: flex;
+            }
+
+            .nav a {
+                padding: 12px 5px;
+            }
+
+            .nav .login-btn {
+                margin-top: 8px;
+                text-align: center;
+            }
+
+            .mobile-menu {
+                display: block;
+            }
+
+            .hero {
+                padding-top: 68px;
+            }
+
+            .hero-container {
+                min-height: auto;
+                padding-top: 50px;
+            }
+
+            .hero h1 {
+                letter-spacing: -2px;
+            }
+
+            .hero-description {
+                font-size: 14px;
+            }
+
+            .hero-actions {
+                flex-direction: column;
+            }
+
+            .primary-btn,
+            .secondary-btn {
+                width: 100%;
+                max-width: 280px;
+            }
+
+            .hero-stats {
+                gap: 25px;
+                flex-wrap: wrap;
+            }
+
+            .preview-window {
+                transform: none;
+            }
+
+            .floating-card {
+                right: 8px;
+                bottom: 15px;
+                width: 145px;
+            }
+
+            .section {
+                padding: 75px 0;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .analytics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .division-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .cta-container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .footer-container {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-container,
+            .section-container,
+            .hero-container,
+            .footer-container {
+                width: min(100% - 28px, 1200px);
+            }
+
+            .brand-text span {
+                font-size: 8px;
+            }
+
+            .hero h1 {
+                font-size: 39px;
+            }
+
+            .preview-kpis {
+                grid-template-columns: 1fr;
+            }
+
+            .preview-kpi {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .preview-kpi strong {
+                margin-top: 0;
+            }
+
+            .division-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .floating-card {
+                display: none;
+            }
+        }
+    </style>
 </head>
-
 
 <body>
 
+    <!-- =========================
+         HEADER
+    ========================== -->
 
-<!-- =====================================
-     HEADER
-===================================== -->
+    <header class="header">
 
-<header class="header">
+        <div class="header-container">
 
-  <!-- BRAND -->
-  <div class="brand">
+            <a href="index.html" class="brand">
 
-    <div class="logo-box">
+                <div class="logo-box">
+                    <img
+                        src="https://modinaautopartsltd.com/_next/static/media/logo.40df2f61.svg"
+                        alt="Modina Auto Parts Ltd."
+                    >
+                </div>
 
-      <img
-        class="logo"
-        src="https://modinaautopartsltd.com/_next/static/media/logo.40df2f61.svg"
-        alt="Modina Auto Parts Ltd">
+                <div class="brand-text">
+                    <strong>Sales Analysis</strong>
+                    <span>Management System</span>
+                </div>
 
-    </div>
+            </a>
 
-    <div>
+            <nav class="nav" id="mainNav">
 
-      <div class="title">
-        MAPL SALES
-      </div>
+                <a href="#features">Features</a>
+                <a href="publicdashboard.html">Analytics</a>
+                <a href="division-brand-target-report.html">Divisions & Brand Report</a>
 
-      <div class="subtitle">
-        Sales & Performance Management
-      </div>
+                <a href="login.html" class="login-btn">
+                    Login to Admin
+                </a>
 
-    </div>
+            </nav>
 
-  </div>
+            <button
+                type="button"
+                class="mobile-menu"
+                id="mobileMenu"
+                aria-label="Open Menu"
+            >
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
 
+        </div>
 
-  <!-- ACTION BUTTONS -->
-  <div class="actions">
-
-
-    <!-- DARK / LIGHT MODE -->
-
-    <button
-      onclick="toggleTheme()"
-      title="Toggle Dark / Light Mode"
-      aria-label="Toggle Dark / Light Mode">
-
-      ☾ / ☀
-
-    </button>
+    </header>
 
 
-    <!-- =================================
-         TVS DASHBOARD
-    ================================== -->
+    <!-- =========================
+         HERO
+    ========================== -->
 
-    <a
+    <main>
+
+        <section class="hero">
+
+            <div class="hero-container">
+
+                <div class="hero-content">
+
+                    <div class="eyebrow">
+                        <i class="eyebrow-dot"></i>
+                        MAPL Business Intelligence
+                    </div>
+
+                    <h1>
+                        Smarter Sales.
+                        <br>
+                        <span>Better Decisions.</span>
+                    </h1>
+
+                    <p class="hero-description">
+                        A centralized sales management and performance
+                        analysis platform for Modina Auto Parts Ltd.
+                        Monitor sales, targets, divisions and business
+                        performance from one professional dashboard.
+                    </p>
+
+                    <div class="hero-actions">
+
+                        <a
+                            href="publicdashboard.html"
+                            class="primary-btn"
+                        >
+                            Enter Dashboard
+                        </a>
+
+                            <a
       class="tvs-btn"
       href="https://rakib-mapl-database.github.io/tvs"
       target="_blank"
@@ -472,202 +1432,685 @@ html.dark .tvs-btn{
 
 
       <span class="tvs-text">
-        Enter to Dashboard
+         Dashboard
       </span>
 
 
     </a>
 
 
-    <!-- MAPL DASHBOARD -->
+                    </div>
 
-    <a
-      class="primary"
-      href="dashboard.html">
+                    <div class="hero-stats">
 
-      Dashboard
+                        <div class="hero-stat">
+                            <strong>8</strong>
+                            <span>Sales Divisions</span>
+                        </div>
 
-    </a>
+                        <div class="hero-stat">
+                            <strong>24/7</strong>
+                            <span>Data Access</span>
+                        </div>
 
+                        <div class="hero-stat">
+                            <strong>100%</strong>
+                            <span>Centralized Analysis</span>
+                        </div>
 
-    <!-- ADMIN LOGIN -->
+                    </div>
 
-    <a
-      href="login.html">
+                </div>
 
-      Admin Login
 
-    </a>
+                <!-- Dashboard Preview -->
 
+                <div class="dashboard-preview">
 
-  </div>
+                    <div class="preview-window">
 
-</header>
+                        <div class="preview-top">
+                            <div class="window-dots">
+                                <i></i>
+                                <i></i>
+                                <i></i>
+                            </div>
+                        </div>
 
+                        <div class="preview-body">
 
+                            <div class="preview-heading">
+                                <strong>Sales Dashboard</strong>
+                                <span>MAPL Management System</span>
+                            </div>
 
-<!-- =====================================
-     HERO
-===================================== -->
+                            <div class="preview-kpis">
 
-<section class="hero">
+                                <div class="preview-kpi">
+                                    <small>Total Sales</small>
+                                    <strong>৳25,635,795</strong>
+                                </div>
 
-  <h1>
-    Sales Intelligence
-  </h1>
+                                <div class="preview-kpi red">
+                                    <small>Achievement</small>
+                                    <strong>30.78%</strong>
+                                </div>
 
+                                <div class="preview-kpi">
+                                    <small>Remaining</small>
+                                    <strong>৳57,664,205</strong>
+                                </div>
 
-  <p>
-    Advanced sales monitoring, target tracking,
-    performance analysis and management reporting
-    for Modina Auto Parts Ltd.
-  </p>
+                            </div>
 
+                            <div class="preview-chart">
 
-  <a
-    class="primary hero-action"
-    href="dashboard.html">
+                                <i class="chart-bar"></i>
+                                <i class="chart-bar"></i>
+                                <i class="chart-bar"></i>
+                                <i class="chart-bar"></i>
+                                <i class="chart-bar"></i>
+                                <i class="chart-bar"></i>
+                                <i class="chart-bar"></i>
 
-    View Sales Dashboard →
+                            </div>
 
-  </a>
+                            <div class="preview-bottom">
 
-</section>
+                                <div class="preview-mini">
 
+                                    <span>
+                                        Target Progress
+                                    </span>
 
+                                    <div class="progress">
+                                        <i></i>
+                                    </div>
 
-<!-- =====================================
-     FEATURE CARDS
-===================================== -->
+                                </div>
 
-<section class="grid">
+                                <div class="preview-mini">
 
+                                    <span>
+                                        Monthly Performance
+                                    </span>
 
-  <!-- SALES DASHBOARD -->
+                                    <strong
+                                        style="
+                                            display:block;
+                                            margin-top:14px;
+                                            font-size:18px;
+                                        "
+                                    >
+                                        30.78%
+                                    </strong>
 
-  <div class="card">
+                                </div>
 
-    <h3>
-      📊 Sales Dashboard
-    </h3>
+                            </div>
 
-    <p>
-      View current sales, target achievement,
-      trends and management KPIs.
-    </p>
+                        </div>
 
-    <a
-      href="dashboard.html">
+                    </div>
 
-      Open Dashboard
+                    <div class="floating-card">
 
-    </a>
+                        <small>
+                            Performance Status
+                        </small>
 
-  </div>
+                        <strong>
+                            On Track
+                        </strong>
 
+                        <span>
+                            Sales monitoring active
+                        </span>
 
+                    </div>
 
-  <!-- TARGET MANAGEMENT -->
+                </div>
 
-  <div class="card">
+            </div>
 
-    <h3>
-      🎯 Target Management
-    </h3>
+        </section>
 
-    <p>
-      Monthly, yearly and daily sales targets
-      are managed securely.
-    </p>
 
-  </div>
+        <!-- =========================
+             FEATURES
+        ========================== -->
 
+        <section
+            class="section section-light"
+            id="features"
+        >
 
+            <div class="section-container">
 
-  <!-- ADMIN PANEL -->
+                <div class="section-heading">
 
-  <div class="card">
+                    <div class="label">
+                        System Features
+                    </div>
 
-    <h3>
-      🔐 Admin Panel
-    </h3>
+                    <h2>
+                        Everything you need to
+                        manage sales performance
+                    </h2>
 
-    <p>
-      Authorized administrators can add,
-      edit and delete sales records.
-    </p>
+                    <p>
+                        A centralized platform designed to simplify
+                        daily sales monitoring, target tracking and
+                        management reporting.
+                    </p>
 
-    <a
-      href="login.html">
+                </div>
 
-      Admin Login
 
-    </a>
+                <div class="features-grid">
 
-  </div>
+                    <div class="feature-card">
 
+                        <div class="feature-icon">
+                            $
+                        </div>
 
-</section>
+                        <h3>
+                            Sales Management
+                        </h3>
 
+                        <p>
+                            Record, update and manage daily sales
+                            transactions with division-wise tracking.
+                        </p>
 
+                    </div>
 
-<!-- =====================================
-     FOOTER
-===================================== -->
 
-<footer class="footer">
+                    <div class="feature-card">
 
-  © Modina Auto Parts Ltd. — MAPL Sales Management
+                        <div class="feature-icon">
+                            %
+                        </div>
 
-</footer>
+                        <h3>
+                            Target Tracking
+                        </h3>
 
+                        <p>
+                            Monitor monthly targets, achievement
+                            percentage and remaining sales requirements.
+                        </p>
 
+                    </div>
 
-<!-- =====================================
-     JAVASCRIPT
-===================================== -->
 
-<script>
+                    <div class="feature-card">
 
+                        <div class="feature-icon">
+                            ↗
+                        </div>
 
-/* =====================================
-   DARK / LIGHT MODE
-===================================== */
+                        <h3>
+                            Performance Analytics
+                        </h3>
 
-function toggleTheme(){
+                        <p>
+                            Visualize sales trends, target versus
+                            actual performance and monthly comparisons.
+                        </p>
 
-  document.documentElement.classList.toggle('dark');
+                    </div>
 
 
-  localStorage.setItem(
-    'MAPL_THEME',
+                    <div class="feature-card">
 
-    document.documentElement.classList.contains('dark')
-      ? 'dark'
-      : 'light'
-  );
+                        <div class="feature-icon">
+                            ≡
+                        </div>
 
-}
+                        <h3>
+                            Management Reports
+                        </h3>
 
+                        <p>
+                            Access structured reports and business
+                            insights for faster management decisions.
+                        </p>
 
-/* =====================================
-   LOAD SAVED THEME
-===================================== */
+                    </div>
 
-(function(){
+                </div>
 
-  if(
-    localStorage.getItem('MAPL_THEME') === 'dark'
-  ){
+            </div>
 
-    document.documentElement.classList.add('dark');
+        </section>
 
-  }
 
-})();
+        <!-- =========================
+             ANALYTICS
+        ========================== -->
 
-</script>
+        <section
+            class="section analytics-section"
+            id="analytics"
+        >
 
+            <div class="section-container">
+
+                <div class="section-heading">
+
+                    <div class="label">
+                        Business Intelligence
+                    </div>
+
+                    <h2>
+                        Turn sales data into
+                        meaningful insights
+                    </h2>
+
+                    <p>
+                        Understand business performance through
+                        clear KPIs, charts and structured analysis.
+                    </p>
+
+                </div>
+
+
+                <div class="analytics-grid">
+
+                    <div class="analytics-card">
+
+                        <h3>
+                            Sales Trend Analysis
+                        </h3>
+
+                        <p>
+                            Analyze daily sales movement and identify
+                            performance patterns across the selected
+                            period.
+                        </p>
+
+                        <div class="mini-bars">
+                            <i></i>
+                            <i></i>
+                            <i></i>
+                            <i></i>
+                            <i></i>
+                            <i></i>
+                            <i></i>
+                        </div>
+
+                    </div>
+
+
+                    <div class="analytics-card">
+
+                        <h3>
+                            Target vs Actual
+                        </h3>
+
+                        <p>
+                            Compare actual sales against target values
+                            and understand the current achievement
+                            position.
+                        </p>
+
+                        <div class="metric-row">
+
+                            <div class="metric-value">
+                                30.78%
+                            </div>
+
+                            <div class="metric-change">
+                                Achievement
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="analytics-card">
+
+                        <h3>
+                            Division Performance
+                        </h3>
+
+                        <p>
+                            Review sales contribution and performance
+                            across all MAPL sales divisions.
+                        </p>
+
+                        <div class="metric-row">
+
+                            <div class="metric-value">
+                                8
+                            </div>
+
+                            <div class="metric-change">
+                                Active Divisions
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="analytics-card">
+
+                        <h3>
+                            Management Insights
+                        </h3>
+
+                        <p>
+                            Get a structured view of key sales indicators
+                            to support operational planning and review.
+                        </p>
+
+                        <div class="metric-row">
+
+                            <div class="metric-value">
+                                Live
+                            </div>
+
+                            <div class="metric-change">
+                                Dashboard Data
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             DIVISIONS
+        ========================== -->
+
+        <section
+            class="section"
+            id="divisions"
+        >
+
+            <div class="section-container">
+
+                <div class="section-heading">
+
+                    <div class="label">
+                        Sales Network
+                    </div>
+
+                    <h2>
+                        Division-wise performance
+                        visibility
+                    </h2>
+
+                    <p>
+                        Maintain a consistent view of sales performance
+                        across the eight MAPL divisions.
+                    </p>
+
+                </div>
+
+
+                <div class="division-grid">
+
+                    <div class="division-item">
+                        <strong>Dhaka</strong>
+                        <span>Sales Division</span>
+                        <div class="division-line">
+                            <i style="width: 82%;"></i>
+                        </div>
+                    </div>
+
+                    <div class="division-item">
+                        <strong>Mymensingh</strong>
+                        <span>Sales Division</span>
+                        <div class="division-line">
+                            <i style="width: 70%;"></i>
+                        </div>
+                    </div>
+
+                    <div class="division-item">
+                        <strong>Chittagong</strong>
+                        <span>Sales Division</span>
+                        <div class="division-line">
+                            <i style="width: 78%;"></i>
+                        </div>
+                    </div>
+
+                    <div class="division-item">
+                        <strong>Sylhet</strong>
+                        <span>Sales Division</span>
+                        <div class="division-line">
+                            <i style="width: 60%;"></i>
+                        </div>
+                    </div>
+
+                    <div class="division-item">
+                        <strong>Khulna</strong>
+                        <span>Sales Division</span>
+                        <div class="division-line">
+                            <i style="width: 75%;"></i>
+                        </div>
+                    </div>
+
+                    <div class="division-item">
+                        <strong>Barishal</strong>
+                        <span>Sales Division</span>
+                        <div class="division-line">
+                            <i style="width: 58%;"></i>
+                        </div>
+                    </div>
+
+                    <div class="division-item">
+                        <strong>Rajshahi</strong>
+                        <span>Sales Division</span>
+                        <div class="division-line">
+                            <i style="width: 73%;"></i>
+                        </div>
+                    </div>
+
+                    <div class="division-item">
+                        <strong>Rangpur</strong>
+                        <span>Sales Division</span>
+                        <div class="division-line">
+                            <i style="width: 64%;"></i>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             CTA
+        ========================== -->
+
+        <section class="cta">
+
+            <div class="cta-container">
+
+                <div>
+
+                    <h2>
+                        Ready to manage your
+                        sales performance?
+                    </h2>
+
+                    <p>
+                        Access the MAPL Sales Management Dashboard
+                        and monitor your business performance from
+                        one centralized system.
+                    </p>
+
+                </div>
+
+                <a
+                    href="login.html"
+                    class="cta-button"
+                >
+                    Administration
+                </a>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =========================
+         FOOTER
+    ========================== -->
+
+    <footer>
+
+        <div class="footer-container">
+
+            <div class="footer-brand">
+
+                <div class="footer-logo">
+                    <img
+                        src="https://modinaautopartsltd.com/_next/static/media/logo.40df2f61.svg"
+                        alt="MAPL"
+                    >
+                </div>
+
+                <span>
+                    Modina Auto Parts Ltd.
+                </span>
+
+            </div>
+
+            <div class="copyright">
+                © 2026 Modina Auto Parts Ltd. All Rights Reserved.
+            </div>
+
+        </div>
+
+    </footer>
+
+
+    <!-- =========================
+         JAVASCRIPT
+    ========================== -->
+
+    <script>
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+                const mobileMenu =
+                    document.getElementById("mobileMenu");
+
+                const mainNav =
+                    document.getElementById("mainNav");
+
+                if (mobileMenu && mainNav) {
+
+                    mobileMenu.addEventListener(
+                        "click",
+                        function () {
+
+                            mainNav.classList.toggle("show");
+
+                        }
+                    );
+
+                }
+
+
+                document
+                    .querySelectorAll("#mainNav a")
+                    .forEach(function (link) {
+
+                        link.addEventListener(
+                            "click",
+                            function () {
+
+                                mainNav.classList.remove("show");
+
+                            }
+                        );
+
+                    });
+
+
+                /*
+                 * Smooth scrolling for
+                 * internal navigation
+                 */
+
+                document
+                    .querySelectorAll('a[href^="#"]')
+                    .forEach(function (link) {
+
+                        link.addEventListener(
+                            "click",
+                            function (event) {
+
+                                const targetId =
+                                    this.getAttribute("href");
+
+                                if (
+                                    !targetId ||
+                                    targetId === "#"
+                                ) {
+                                    return;
+                                }
+
+                                const target =
+                                    document.querySelector(
+                                        targetId
+                                    );
+
+                                if (target) {
+
+                                    event.preventDefault();
+
+                                    const header =
+                                        document.querySelector(
+                                            ".header"
+                                        );
+
+                                    const offset =
+                                        header
+                                            ? header.offsetHeight
+                                            : 0;
+
+                                    const targetPosition =
+                                        target.getBoundingClientRect()
+                                            .top +
+                                        window.pageYOffset -
+                                        offset;
+
+                                    window.scrollTo({
+                                        top: targetPosition,
+                                        behavior: "smooth"
+                                    });
+
+                                }
+
+                            }
+                        );
+
+                    });
+
+            }
+        );
+
+    </script>
 
 </body>
 </html>
