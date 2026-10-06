@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>MAPL Sales Analysis | Divisions</title>
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+    ></script>
+
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="logo-box">
+
+                <img
+                    src="https://modinaautopartsltd.com/_next/static/media/logo.40df2f61.svg"
+                    alt="Modina Auto Parts Ltd."
+                >
+
+            </div>
+
+            <div>
+
+                <strong>
+                    Sales Analysis
+                </strong>
+
+                <small>
+                    Management System
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+            <a
+                href="admin.html"
+                class="nav-item"
+            >
+                Dashboard
+            </a>
+
+
+            <a
+                href="admin.html#salesRecords"
+                class="nav-item"
+            >
+                Sales Records
+            </a>
+
+
+            <a
+                href="reports.html"
+                class="nav-item"
+            >
+                Reports
+            </a>
+
+
+            <a
+                href="targets.html"
+                class="nav-item"
+            >
+                Targets
+            </a>
+
+<a href="brand-targets.html" class="nav-item">Brand Targets</a>
+            <a
+                href="divisions.html"
+                class="nav-item active"
+            >
+                Divisions
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <button
+                type="button"
+                id="logoutBtn"
+                class="logout-button"
+            >
+                Sign Out
+            </button>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- ================= MAIN ================= -->
+
+    <main class="main-content">
+
+        <!-- TOPBAR -->
+
+        <header class="topbar">
+
+            <div>
+
+                <h1>
+                    Division Performance
+                </h1>
+
+                <p>
+                    Division-wise sales and target analysis
+                </p>
+
+            </div>
+
+
+            <div class="user-info">
+
+                <div class="user-avatar">
+                    A
+                </div>
+
+                <div>
+
+                    <strong id="userName">
+                        Administrator
+                    </strong>
+
+                    <small id="userRole">
+                        ADMIN
+                    </small>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- ================= FILTER ================= -->
+
+        <section class="dashboard-card">
+
+            <div class="section-header">
+
+                <div>
+
+                    <h2>
+                        Division Filters
+                    </h2>
+
+                    <p>
+                        Select reporting period
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="division-filter-grid">
+
+                <div class="filter-group">
+
+                    <label for="fromDate">
+                        From Date
+                    </label>
+
+                    <input
+                        type="date"
+                        id="fromDate"
+                    >
+
+                </div>
+
+
+                <div class="filter-group">
+
+                    <label for="toDate">
+                        To Date
+                    </label>
+
+                    <input
+                        type="date"
+                        id="toDate"
+                    >
+
+                </div>
+
+
+                <div class="filter-group">
+
+                    <label for="divisionSearch">
+                        Search Division
+                    </label>
+
+                    <input
+                        type="text"
+                        id="divisionSearch"
+                        placeholder="Search division..."
+                    >
+
+                </div>
+
+
+                <div class="filter-actions">
+
+                    <button
+                        type="button"
+                        id="applyFilter"
+                        class="primary-button"
+                    >
+                        Apply
+                    </button>
+
+
+                    <button
+                        type="button"
+                        id="resetFilter"
+                        class="secondary-button"
+                    >
+                        Reset
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= KPI ================= -->
+
+        <section class="kpi-grid">
+
+            <div class="kpi-card">
+
+                <span>
+                    Total Division Sales
+                </span>
+
+                <strong id="divisionTotalSales">
+                    ৳0
+                </strong>
+
+            </div>
+
+
+            <div class="kpi-card">
+
+                <span>
+                    Total Target
+                </span>
+
+                <strong id="divisionTotalTarget">
+                    ৳0
+                </strong>
+
+            </div>
+
+
+            <div class="kpi-card">
+
+                <span>
+                    Overall Achievement
+                </span>
+
+                <strong id="divisionAchievement">
+                    0.00%
+                </strong>
+
+            </div>
+
+
+            <div class="kpi-card">
+
+                <span>
+                    Active Divisions
+                </span>
+
+                <strong id="activeDivisionCount">
+                    0
+                </strong>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= MAIN TABLE ================= -->
+
+        <section class="dashboard-card">
+
+            <div class="section-header">
+
+                <div>
+
+                    <h2>
+                        Division Performance
+                    </h2>
+
+                    <p>
+                        Current sales performance against monthly target
+                    </p>
+
+                </div>
+
+
+                <div>
+
+                    <button
+                        type="button"
+                        id="exportDivisionCSV"
+                        class="primary-button"
+                    >
+                        Export CSV
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div class="table-container">
+
+                <table class="division-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>#</th>
+
+                            <th>Division</th>
+
+                            <th>Sales</th>
+
+                            <th>Monthly Target</th>
+
+                            <th>Achievement</th>
+
+                            <th>Remaining</th>
+
+                            <th>Transactions</th>
+
+                            <th>Status</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="divisionTableBody">
+
+                        <tr>
+
+                            <td
+                                colspan="8"
+                                style="text-align:center;"
+                            >
+                                Loading division data...
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= SUMMARY ================= -->
+
+        <section class="dashboard-card">
+
+            <div class="section-header">
+
+                <div>
+
+                    <h2>
+                        Division Summary
+                    </h2>
+
+                    <p>
+                        Management overview
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div
+                id="divisionSummary"
+                class="management-note"
+            >
+                Loading summary...
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= INFORMATION ================= -->
+
+        <section class="dashboard-card">
+
+            <div class="section-header">
+
+                <div>
+
+                    <h2>
+                        Report Information
+                    </h2>
+
+                    <p>
+                        Current selection details
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="info-grid">
+
+                <div class="info-item">
+
+                    <span>
+                        From Date
+                    </span>
+
+                    <strong id="infoFromDate">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="info-item">
+
+                    <span>
+                        To Date
+                    </span>
+
+                    <strong id="infoToDate">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="info-item">
+
+                    <span>
+                        Total Transactions
+                    </span>
+
+                    <strong id="infoTransactions">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<script src="js/config.js"></script>
+
+<script src="js/divisions.js"></script>
+
+</body>
+</html>

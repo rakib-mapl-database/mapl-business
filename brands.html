@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MAPL | Brand Management</title>
+
+    <link rel="icon"
+          href="https://modinaautopartsltd.com/_next/static/media/logo.40df2f61.svg">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/brands.css">
+</head>
+
+<body>
+
+<!-- =========================
+     TOP HEADER
+========================= -->
+<header class="top-header">
+
+    <div class="header-left">
+
+        <a href="admin.html" class="logo-box">
+            <img
+                src="https://modinaautopartsltd.com/_next/static/media/logo.40df2f61.svg"
+                alt="MAPL Logo">
+        </a>
+
+        <div class="page-title">
+            <h1>Brand Management</h1>
+            <span>Manage product brands &amp; master data</span>
+        </div>
+
+    </div>
+
+    <div class="header-right">
+
+        <div class="user-info">
+            <strong id="userName">Administrator</strong>
+            <span id="userEmail">Loading...</span>
+        </div>
+
+        <button id="logoutBtn" class="logout-btn">
+            Sign Out
+        </button>
+<a href="admin.html">
+    🏷️ Dashboard
+</a>
+    </div>
+
+</header>
+
+
+<!-- =========================
+     MAIN
+========================= -->
+<main class="container">
+
+    <!-- PAGE HEADING -->
+    <section class="page-heading">
+
+        <div>
+            <h2>Brand Master</h2>
+            <p>
+                Add, edit, activate, deactivate or delete brands.
+            </p>
+        </div>
+
+        <button id="openAddModalBtn" class="primary-btn">
+            <span>＋</span>
+            Add New Brand
+        </button>
+
+    </section>
+
+
+    <!-- =========================
+         SUMMARY CARDS
+    ========================= -->
+    <section class="summary-grid">
+
+        <div class="summary-card">
+            <div class="summary-icon">🏷️</div>
+
+            <div>
+                <span>Total Brands</span>
+                <strong id="totalBrands">0</strong>
+            </div>
+        </div>
+
+
+        <div class="summary-card active-card">
+            <div class="summary-icon">✓</div>
+
+            <div>
+                <span>Active Brands</span>
+                <strong id="activeBrands">0</strong>
+            </div>
+        </div>
+
+
+        <div class="summary-card inactive-card">
+            <div class="summary-icon">⏸</div>
+
+            <div>
+                <span>Inactive Brands</span>
+                <strong id="inactiveBrands">0</strong>
+            </div>
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         TOOLBAR
+    ========================= -->
+    <section class="toolbar">
+
+        <div class="search-box">
+
+            <span class="search-icon">⌕</span>
+
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search brand name...">
+
+            <button
+                type="button"
+                id="clearSearchBtn"
+                class="clear-search">
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="filter-box">
+
+            <label for="statusFilter">Status</label>
+
+            <select id="statusFilter">
+
+                <option value="all">
+                    All Brands
+                </option>
+
+                <option value="active">
+                    Active Only
+                </option>
+
+                <option value="inactive">
+                    Inactive Only
+                </option>
+
+            </select>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================
+         MESSAGE
+    ========================= -->
+    <div id="messageBox" class="message-box"></div>
+
+
+    <!-- =========================
+         BRAND TABLE
+    ========================= -->
+    <section class="table-card">
+
+        <div class="table-header">
+
+            <div>
+                <h3>Brand List</h3>
+                <span id="resultCount">
+                    0 brands
+                </span>
+            </div>
+
+            <button
+                id="refreshBtn"
+                class="secondary-btn">
+                ↻ Refresh
+            </button>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>#</th>
+                        <th>Brand Name</th>
+                        <th>Status</th>
+                        <th>Created</th>
+                        <th>Last Updated</th>
+                        <th>Actions</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="brandTableBody">
+
+                    <tr>
+                        <td colspan="6" class="loading-cell">
+                            Loading brands...
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- =========================
+     ADD / EDIT MODAL
+========================= -->
+<div id="brandModal" class="modal-overlay">
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <div>
+                <h3 id="modalTitle">
+                    Add New Brand
+                </h3>
+
+                <p id="modalSubtitle">
+                    Create a new product brand.
+                </p>
+            </div>
+
+            <button
+                type="button"
+                id="closeModalBtn"
+                class="close-btn">
+                ×
+            </button>
+
+        </div>
+
+
+        <form id="brandForm">
+
+            <input
+                type="hidden"
+                id="brandId">
+
+
+            <div class="form-group">
+
+                <label for="brandName">
+                    Brand Name
+                    <span>*</span>
+                </label>
+
+                <input
+                    type="text"
+                    id="brandName"
+                    placeholder="Example: MAHLE"
+                    autocomplete="off"
+                    required>
+
+                <small>
+                    Brand name must be unique.
+                </small>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Status
+                </label>
+
+                <label class="switch-row">
+
+                    <input
+                        type="checkbox"
+                        id="brandActive"
+                        checked>
+
+                    <span class="switch"></span>
+
+                    <span id="statusText">
+                        Active
+                    </span>
+
+                </label>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="brandRemarks">
+                    Remarks
+                </label>
+
+                <textarea
+                    id="brandRemarks"
+                    rows="3"
+                    placeholder="Optional remarks..."></textarea>
+
+            </div>
+
+
+            <div
+                id="modalMessage"
+                class="modal-message">
+            </div>
+
+
+            <div class="modal-footer">
+
+                <button
+                    type="button"
+                    id="cancelBtn"
+                    class="cancel-btn">
+                    Cancel
+                </button>
+
+                <button
+                    type="submit"
+                    id="saveBrandBtn"
+                    class="primary-btn">
+
+                    <span id="saveBtnText">
+                        Save Brand
+                    </span>
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     DELETE CONFIRM MODAL
+========================= -->
+<div id="deleteModal" class="modal-overlay">
+
+    <div class="modal delete-modal">
+
+        <div class="delete-icon">
+            !
+        </div>
+
+        <h3>Delete Brand?</h3>
+
+        <p>
+            Are you sure you want to delete
+            <strong id="deleteBrandName"></strong>?
+        </p>
+
+        <p class="warning-text">
+            If this brand is already used in sales records,
+            it cannot be permanently deleted.
+            In that case, deactivate the brand instead.
+        </p>
+
+        <div class="modal-footer">
+
+            <button
+                type="button"
+                id="cancelDeleteBtn"
+                class="cancel-btn">
+                Cancel
+            </button>
+
+            <button
+                type="button"
+                id="confirmDeleteBtn"
+                class="delete-btn">
+                Delete Brand
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     SUPABASE
+========================= -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="js/config.js"></script>
+<script src="js/brands.js"></script>
+
+</body>
+</html>

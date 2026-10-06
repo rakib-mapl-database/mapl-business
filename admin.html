@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+```
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>MAPL Sales Analysis | Dashboard</title>
+
+<!-- Google Font -->
+<link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+>
+
+<link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+>
+
+<link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+>
+
+<!-- Main CSS -->
+<link
+    rel="stylesheet"
+    href="css/style.css"
+>
+
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+```
+
+</head>
+
+<body>
+
+<div class="app">
+
+```
+<!-- =====================================================
+     SIDEBAR
+====================================================== -->
+
+<aside class="sidebar">
+
+    <!-- BRAND -->
+
+    <div class="brand">
+
+        <div class="logo-box">
+
+            <img
+                src="https://modinaautopartsltd.com/_next/static/media/logo.40df2f61.svg"
+                alt="Modina Auto Parts Ltd."
+            >
+
+        </div>
+
+
+        <div>
+
+            <strong>
+                Sales Analysis
+            </strong>
+
+            <small>
+                Management System
+            </small>
+
+        </div>
+
+    </div>
+
+
+    <!-- NAVIGATION -->
+
+    <nav class="sidebar-nav">
+
+        <a
+            href="admin.html"
+            class="nav-item active"
+        >
+            Dashboard
+        </a>
+
+
+        <a
+            href="admin.html#salesRecords"
+            class="nav-item"
+        >
+            Sales Records
+        </a>
+
+        <a
+            href="reports.html"
+            class="nav-item"
+        >
+            Reports Division Wise
+        </a>
+<a href="division-brand-sales.html" class="nav-item">Division Brand Sales Entry</a>
+
+<a
+            href="brands.html"
+            class="nav-item"
+        >
+            Brand Management
+        </a>
+
+        <a
+            href="targets.html"
+            class="nav-item"
+        >
+            Targets
+        </a>
+<a href="brand-targets.html" class="nav-item">Brand Targets</a>
+
+        <a
+            href="divisions.html"
+            class="nav-item"
+        >
+            Divisions
+        </a>
+
+    </nav>
+
+
+    <!-- SIDEBAR BOTTOM -->
+
+    <div class="sidebar-bottom">
+
+        <button
+            type="button"
+            id="logoutBtn"
+            class="logout-button"
+        >
+            Sign Out
+        </button>
+
+    </div>
+
+</aside>
+
+
+
+<!-- =====================================================
+     MAIN CONTENT
+====================================================== -->
+
+<main class="main-content">
+
+
+    <!-- =================================================
+         TOPBAR
+    ================================================== -->
+
+    <header class="topbar">
+
+        <div>
+
+            <h1>
+                Sales Dashboard
+            </h1>
+
+            <p>
+                Executive sales performance overview
+            </p>
+
+        </div>
+
+
+        <!-- USER INFORMATION -->
+
+        <div class="user-info">
+
+            <div class="user-avatar">
+                A
+            </div>
+
+
+            <div>
+
+                <strong id="userName">
+                    Administrator
+                </strong>
+
+                <small id="userRole">
+                    ADMIN
+                </small>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- =================================================
+         FILTERS
+    ================================================== -->
+
+    <section class="filter-card">
+
+
+        <!-- FROM DATE -->
+
+        <div class="filter-group">
+
+            <label for="fromDate">
+                From Date
+            </label>
+
+            <input
+                type="date"
+                id="fromDate"
+            >
+
+        </div>
+
+
+
+        <!-- TO DATE -->
+
+        <div class="filter-group">
+
+            <label for="toDate">
+                To Date
+            </label>
+
+            <input
+                type="date"
+                id="toDate"
+            >
+
+        </div>
+
+
+
+        <!-- DIVISION -->
+
+        <div class="filter-group">
+
+            <label for="divisionFilter">
+                Division
+            </label>
+
+            <select id="divisionFilter">
+
+                <option value="">
+                    All Divisions
+                </option>
+
+            </select>
+
+        </div>
+
+
+
+        <!-- APPLY -->
+
+        <button
+            type="button"
+            id="applyFilter"
+            class="primary-button"
+        >
+            Apply Filter
+        </button>
+
+    </section>
+
+
+
+    <!-- =================================================
+         KPI CARDS
+    ================================================== -->
+
+    <section class="kpi-grid">
+
+
+        <!-- TOTAL SALES -->
+
+        <div class="kpi-card">
+
+            <span>
+                Total Sales
+            </span>
+
+            <strong id="totalSales">
+                ৳0
+            </strong>
+
+        </div>
+
+
+
+        <!-- TOTAL TARGET -->
+
+        <div class="kpi-card">
+
+            <span>
+                Total Target
+            </span>
+
+            <strong id="totalTarget">
+                ৳0
+            </strong>
+
+        </div>
+
+
+
+        <!-- ACHIEVEMENT -->
+
+        <div class="kpi-card">
+
+            <span>
+                Achievement
+            </span>
+
+            <strong id="achievement">
+                0%
+            </strong>
+
+        </div>
+
+
+
+        <!-- REMAINING -->
+
+        <div class="kpi-card">
+
+            <span>
+                Remaining
+            </span>
+
+            <strong id="remaining">
+                ৳0
+            </strong>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         TARGET PROGRESS
+    ================================================== -->
+
+    <section class="dashboard-card">
+
+        <div class="section-header">
+
+            <div>
+
+                <h2>
+                    Target Progress
+                </h2>
+
+                <p>
+                    Overall achievement against target
+                </p>
+
+            </div>
+
+
+            <strong id="progressPercent">
+                0%
+            </strong>
+
+        </div>
+
+
+        <div class="progress-container">
+
+            <div
+                id="targetProgress"
+                class="progress-bar"
+                style="width: 0%;"
+            ></div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         CHARTS
+    ================================================== -->
+
+    <section class="dashboard-grid">
+
+
+        <!-- SALES TREND -->
+
+        <div class="dashboard-card">
+
+            <h2>
+                Sales Trend
+            </h2>
+
+            <canvas id="salesTrendChart"></canvas>
+
+        </div>
+
+
+
+        <!-- TARGET VS ACTUAL -->
+
+        <div class="dashboard-card">
+
+            <h2>
+                Target vs Actual
+            </h2>
+
+            <canvas id="targetActualChart"></canvas>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         MONTHLY COMPARISON
+    ================================================== -->
+
+    <section class="dashboard-card">
+
+        <h2>
+            Monthly Comparison
+        </h2>
+
+        <canvas id="monthlyChart"></canvas>
+
+    </section>
+
+
+
+    <!-- =================================================
+         DIVISION PERFORMANCE
+    ================================================== -->
+
+    <section class="dashboard-card">
+
+        <h2>
+            Division Target vs Achievement
+        </h2>
+
+        <div id="divisionPerformance">
+            Loading...
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         DATE-WISE DIVISION SALES
+    ================================================== -->
+
+    <section class="dashboard-card">
+
+        <h2>
+            Date-wise Division Sales Comparison
+        </h2>
+
+        <div id="dateDivisionTable">
+            Loading...
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         WORKING DAY ANALYSIS
+    ================================================== -->
+
+    <section class="dashboard-card">
+
+        <h2>
+            Working Day Analysis
+        </h2>
+
+        <div id="workingDayAnalysis">
+            Loading...
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         MANAGEMENT INSIGHTS
+    ================================================== -->
+
+    <section class="dashboard-card">
+
+        <h2>
+            Management Insights
+        </h2>
+
+        <div id="managementInsights">
+            Loading...
+        </div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         SALES ENTRY
+    ================================================== -->
+
+    <section
+        class="dashboard-card"
+        id="salesEntrySection"
+    >
+
+        <div class="section-header">
+
+            <div>
+
+                <h2>
+                    Sales Entry
+                </h2>
+
+                <p>
+                    Add daily division-wise sales
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <form
+            id="salesForm"
+            class="sales-entry-form"
+        >
+
+
+            <!-- HIDDEN SALE ID -->
+
+            <input
+                type="hidden"
+                id="saleId"
+            >
+
+
+
+            <!-- SALE DATE -->
+
+            <div class="form-group">
+
+                <label for="saleDate">
+                    Sale Date
+                </label>
+
+                <input
+                    type="date"
+                    id="saleDate"
+                    required
+                >
+
+            </div>
+
+
+
+            <!-- DIVISION -->
+
+            <div class="form-group">
+
+                <label for="saleDivision">
+                    Division
+                </label>
+
+                <select
+                    id="saleDivision"
+                    required
+                >
+
+                    <option value="">
+                        Select Division
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <!-- SALES AMOUNT -->
+
+            <div class="form-group">
+
+                <label for="salesAmount">
+                    Sales Amount
+                </label>
+
+                <input
+                    type="number"
+                    id="salesAmount"
+                    min="0"
+                    step="0.01"
+                    placeholder="Enter sales amount"
+                    required
+                >
+
+            </div>
+
+
+
+            <!-- REMARKS -->
+
+            <div class="form-group">
+
+                <label for="salesRemarks">
+                    Remarks
+                </label>
+
+                <input
+                    type="text"
+                    id="salesRemarks"
+                    placeholder="Optional remarks"
+                >
+
+            </div>
+
+
+
+            <!-- FORM ACTIONS -->
+
+            <div class="form-actions">
+
+                <button
+                    type="submit"
+                    class="btn-primary"
+                    id="saveSaleBtn"
+                >
+                    Save Sales
+                </button>
+
+
+                <button
+                    type="button"
+                    class="btn-secondary"
+                    id="cancelEditBtn"
+                    style="display:none;"
+                >
+                    Cancel Edit
+                </button>
+
+            </div>
+
+        </form>
+
+
+
+        <!-- FORM MESSAGE -->
+
+        <div id="salesFormMessage"></div>
+
+    </section>
+
+
+
+    <!-- =================================================
+         SALES RECORDS
+    ================================================== -->
+
+    <section
+        class="dashboard-card"
+        id="salesRecords"
+    >
+
+
+        <!-- SECTION HEADER -->
+
+        <div class="section-header">
+
+            <div>
+
+                <h2>
+                    Detailed Sales Records
+                </h2>
+
+                <p>
+                    Filtered sales transaction records
+                </p>
+
+            </div>
+
+
+            <!-- EXPORT -->
+
+            <button
+                type="button"
+                id="exportCSV"
+                class="secondary-button"
+            >
+                Export CSV
+            </button>
+
+        </div>
+
+
+
+        <!-- TABLE -->
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Date
+                        </th>
+
+                        <th>
+                            Sales Amount
+                        </th>
+
+                        <th>
+                            Division
+                        </th>
+
+                        <th>
+                            Remarks
+                        </th>
+
+                        <th>
+                            Entry Time
+                        </th>
+
+                        <th>
+                            Action
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="salesTableBody">
+
+                    <tr>
+
+                        <td colspan="6">
+                            Loading...
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+
+</main>
+```
+
+</div>
+
+<!-- =====================================================
+     JAVASCRIPT
+====================================================== -->
+
+<!-- Supabase configuration -->
+
+<script src="js/config.js"></script>
+
+<!-- Dashboard JavaScript -->
+
+<script src="js/admin.js"></script>
+
+<!-- =====================================================
+     SIDEBAR ACTIVE MENU
+====================================================== -->
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const currentPage =
+            window.location.pathname
+                .split("/")
+                .pop()
+                .toLowerCase() || "admin.html";
+
+
+        const navItems =
+            document.querySelectorAll(
+                ".sidebar-nav .nav-item"
+            );
+
+
+        navItems.forEach(function (link) {
+
+            const href =
+                link.getAttribute("href");
+
+
+            if (!href) {
+                return;
+            }
+
+
+            const linkPage =
+                href
+                    .split("#")[0]
+                    .split("/")
+                    .pop()
+                    .toLowerCase();
+
+
+            link.classList.remove("active");
+
+
+            /*
+             * Dashboard
+             */
+
+            if (
+                linkPage === currentPage &&
+                currentPage === "admin.html" &&
+                !href.includes("#salesRecords")
+            ) {
+
+                link.classList.add("active");
+
+            }
+
+
+            /*
+             * Other pages
+             */
+
+            else if (
+                linkPage === currentPage &&
+                currentPage !== "admin.html"
+            ) {
+
+                link.classList.add("active");
+
+            }
+
+        });
+
+
+        /*
+         * Sales Records hash
+         */
+
+        if (
+            window.location.hash === "#salesRecords"
+        ) {
+
+            navItems.forEach(function (link) {
+
+                link.classList.remove("active");
+
+            });
+
+
+            const salesRecordsLink =
+                document.querySelector(
+                    'a[href="admin.html#salesRecords"]'
+                );
+
+
+            if (salesRecordsLink) {
+
+                salesRecordsLink.classList.add("active");
+
+            }
+
+        }
+
+    }
+
+);
+
+</script>
+
+</body>
+
+</html>
