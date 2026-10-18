@@ -1,0 +1,3195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MAPL Public Sales Dashboard</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --red: #e51d2a;
+            --red-dark: #c91521;
+            --black: #0b0b0b;
+            --dark: #151515;
+            --text: #171717;
+            --muted: #737373;
+            --border: #e7e7e7;
+            --bg: #f6f7f9;
+            --white: #ffffff;
+            --green: #168a4a;
+        }
+
+        body {
+            font-family: "Inter", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        button,
+        select,
+        input {
+            font-family: inherit;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+
+            height: 72px;
+
+            background: rgba(255,255,255,.96);
+            backdrop-filter: blur(12px);
+
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-inner {
+            width: min(1400px, calc(100% - 40px));
+            height: 100%;
+            margin: auto;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-box {
+            width: 45px;
+            height: 45px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 5px;
+
+            background: #fff;
+            border-radius: 8px;
+
+            box-shadow: 0 2px 12px rgba(0,0,0,.08);
+        }
+
+        .logo-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .brand-title strong {
+            display: block;
+
+            font-size: 15px;
+            font-weight: 800;
+        }
+
+        .brand-title span {
+            display: block;
+
+            margin-top: 2px;
+
+            color: #777;
+
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-btn {
+            min-height: 38px;
+
+            padding: 0 15px;
+
+            border: 1px solid var(--border);
+            border-radius: 7px;
+
+            background: #fff;
+
+            color: #333;
+
+            font-size: 11px;
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition: .2s ease;
+        }
+
+        .header-btn:hover {
+            border-color: var(--red);
+            color: var(--red);
+        }
+
+        .login-btn {
+            background: var(--red);
+            border-color: var(--red);
+            color: #fff;
+        }
+
+        .login-btn:hover {
+            background: var(--red-dark);
+            color: #fff;
+        }
+
+        /* =========================
+           PAGE
+        ========================= */
+
+        .page {
+            width: min(1400px, calc(100% - 40px));
+            margin: auto;
+            padding: 28px 0 60px;
+        }
+
+        .page-heading {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+
+            gap: 20px;
+
+            margin-bottom: 20px;
+        }
+
+        .page-heading h1 {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -.8px;
+        }
+
+        .page-heading p {
+            margin-top: 6px;
+
+            color: var(--muted);
+
+            font-size: 11px;
+        }
+
+        .live-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+
+            padding: 8px 12px;
+
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 30px;
+
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .live-dot {
+            width: 7px;
+            height: 7px;
+
+            background: #20a65a;
+
+            border-radius: 50%;
+
+            box-shadow: 0 0 0 4px rgba(32,166,90,.10);
+        }
+
+        /* =========================
+           FILTERS
+        ========================= */
+
+        .filter-card {
+            display: grid;
+
+            grid-template-columns: 1fr 1fr 1.3fr auto;
+
+            gap: 12px;
+
+            padding: 16px;
+
+            background: #fff;
+
+            border: 1px solid var(--border);
+            border-radius: 10px;
+
+            margin-bottom: 18px;
+        }
+
+        .filter-group label {
+            display: block;
+
+            margin-bottom: 6px;
+
+            color: #666;
+
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .filter-group input,
+        .filter-group select {
+            width: 100%;
+            height: 40px;
+
+            padding: 0 11px;
+
+            background: #fff;
+
+            border: 1px solid #ddd;
+            border-radius: 6px;
+
+            color: #222;
+
+            font-size: 11px;
+            outline: none;
+        }
+
+        .filter-group input:focus,
+        .filter-group select:focus {
+            border-color: var(--red);
+        }
+
+        .filter-action {
+            display: flex;
+            align-items: flex-end;
+        }
+
+        .apply-btn {
+            width: 100%;
+            height: 40px;
+
+            border: 0;
+            border-radius: 6px;
+
+            background: var(--red);
+            color: #fff;
+
+            font-size: 11px;
+            font-weight: 700;
+
+            cursor: pointer;
+        }
+
+        .apply-btn:hover {
+            background: var(--red-dark);
+        }
+
+        /* =========================
+           KPI
+        ========================= */
+
+        .kpi-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(5, 1fr);
+
+            gap: 12px;
+
+            margin-bottom: 18px;
+        }
+
+        .kpi {
+            padding: 18px;
+
+            background: #fff;
+
+            border: 1px solid var(--border);
+            border-radius: 10px;
+        }
+
+        .kpi-label {
+            color: #777;
+
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .kpi-value {
+            margin-top: 8px;
+
+            font-size: 21px;
+            font-weight: 800;
+            letter-spacing: -.5px;
+        }
+
+        .kpi-value.red {
+            color: var(--red);
+        }
+
+        .kpi-value.green {
+            color: var(--green);
+        }
+
+        .kpi-sub {
+            margin-top: 6px;
+
+            color: #999;
+
+            font-size: 9px;
+        }
+
+        /* =========================
+           PROGRESS
+        ========================= */
+
+        .progress-card {
+            padding: 20px;
+
+            background: #fff;
+
+            border: 1px solid var(--border);
+            border-radius: 10px;
+
+            margin-bottom: 18px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+
+            margin-bottom: 10px;
+        }
+
+        .progress-header strong {
+            font-size: 12px;
+        }
+
+        .progress-header span {
+            color: var(--red);
+
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .progress-track {
+            height: 10px;
+
+            background: #eee;
+
+            border-radius: 20px;
+
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+
+            background: var(--red);
+
+            border-radius: 20px;
+
+            transition: width .5s ease;
+        }
+
+        /* =========================
+           CARDS
+        ========================= */
+
+        .grid-2 {
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 18px;
+
+            margin-bottom: 18px;
+        }
+
+        .card {
+            padding: 20px;
+
+            background: #fff;
+
+            border: 1px solid var(--border);
+            border-radius: 10px;
+
+            overflow: hidden;
+        }
+
+        .card.full {
+            margin-bottom: 18px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 18px;
+        }
+
+        .card-header h2 {
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        .card-header span {
+            color: #888;
+
+            font-size: 9px;
+        }
+
+        .chart-box {
+            position: relative;
+
+            height: 300px;
+        }
+
+        /* =========================
+           TABLE
+        ========================= */
+
+        .table-wrap {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+
+            border-collapse: collapse;
+
+            min-width: 700px;
+        }
+
+        th {
+            padding: 11px;
+
+            background: #fafafa;
+
+            border-bottom: 1px solid var(--border);
+
+            color: #666;
+
+            text-align: left;
+
+            font-size: 9px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 12px 11px;
+
+            border-bottom: 1px solid #f0f0f0;
+
+            color: #333;
+
+            font-size: 10px;
+        }
+
+        tbody tr:hover {
+            background: #fcfcfc;
+        }
+
+        .amount {
+            font-weight: 700;
+        }
+
+        .division-badge {
+            display: inline-flex;
+
+            padding: 5px 8px;
+
+            background: rgba(229,29,42,.07);
+            color: var(--red);
+
+            border-radius: 20px;
+
+            font-size: 8px;
+            font-weight: 700;
+        }
+
+        /* =========================
+           INSIGHTS
+        ========================= */
+
+        .insights {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 12px;
+        }
+
+        .insight {
+            padding: 16px;
+
+            background: #fafafa;
+
+            border: 1px solid #eee;
+            border-radius: 8px;
+        }
+
+        .insight small {
+            display: block;
+
+            color: #888;
+
+            font-size: 9px;
+        }
+
+        .insight strong {
+            display: block;
+
+            margin-top: 7px;
+
+            font-size: 13px;
+        }
+
+        .insight p {
+            margin-top: 6px;
+
+            color: #777;
+
+            font-size: 9px;
+            line-height: 1.6;
+        }
+
+        /* =========================
+           LOADING
+        ========================= */
+
+        .loading {
+            text-align: center;
+
+            padding: 35px;
+
+            color: #888;
+
+            font-size: 11px;
+        }
+
+        .error {
+            display: none;
+
+            margin-bottom: 15px;
+            padding: 12px 15px;
+
+            background: #fff1f2;
+            border: 1px solid #ffd0d4;
+            border-radius: 8px;
+
+            color: #c91521;
+
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        footer {
+            padding: 25px;
+
+            background: #0b0b0b;
+
+            color: #777;
+
+            text-align: center;
+
+            font-size: 9px;
+        }
+
+        /* =========================
+           RESPONSIVE
+        ========================= */
+
+        @media (max-width: 1100px) {
+
+            .kpi-grid {
+                grid-template-columns:
+                    repeat(3, 1fr);
+            }
+
+            .filter-card {
+                grid-template-columns:
+                    1fr 1fr;
+            }
+
+        }
+
+        @media (max-width: 800px) {
+
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .insights {
+                grid-template-columns: 1fr;
+            }
+
+            .page-heading {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+        }
+
+        @media (max-width: 600px) {
+
+            .header {
+                height: 65px;
+            }
+
+            .header-inner {
+                width: calc(100% - 24px);
+            }
+
+            .brand-title span {
+                display: none;
+            }
+
+            .header-btn {
+                padding: 0 10px;
+                font-size: 9px;
+            }
+
+            .page {
+                width: calc(100% - 24px);
+                padding-top: 20px;
+            }
+
+            .kpi-grid {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .filter-card {
+                grid-template-columns: 1fr;
+            }
+
+            .kpi-value {
+                font-size: 17px;
+            }
+
+            .chart-box {
+                height: 250px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<!-- =========================
+     HEADER
+========================= -->
+
+<header class="header">
+
+    <div class="header-inner">
+
+        <a href="index.html" class="brand">
+
+            <div class="logo-box">
+
+                <img
+                    src="https://modinaautopartsltd.com/_next/static/media/logo.40df2f61.svg"
+                    alt="Modina Auto Parts Ltd."
+                >
+
+            </div>
+
+            <div class="brand-title">
+
+                <strong>
+                    MAPL Sales Dashboard
+                </strong>
+
+                <span>
+                    Public Performance Report
+                </span>
+
+            </div>
+
+        </a>
+ <a href="index.html" class="nav-item">
+                Home
+        <div class="header-actions">
+
+            <button
+                type="button"
+                class="header-btn"
+                id="refreshBtn"
+            >
+                Refresh Data
+            </button>
+
+            <a
+                href="login.html"
+                class="header-btn login-btn"
+            >
+                Admin Login
+            </a>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<!-- =========================
+     MAIN
+========================= -->
+
+<main class="page">
+
+    <div class="page-heading">
+
+        <div>
+
+            <h1>
+                Sales Performance Dashboard
+            </h1>
+
+            <p>
+                Real-time sales performance and management report
+            </p>
+
+        </div>
+
+        <div class="live-status">
+
+            <span class="live-dot"></span>
+
+            Live Data
+
+        </div>
+
+    </div>
+
+
+    <div
+        class="error"
+        id="errorMessage"
+    ></div>
+
+
+    <!-- =========================
+         FILTERS
+    ========================== -->
+
+    <div class="filter-card">
+
+        <div class="filter-group">
+
+            <label>
+                From Date
+            </label>
+
+            <input
+                type="date"
+                id="fromDate"
+            >
+
+        </div>
+
+
+        <div class="filter-group">
+
+            <label>
+                To Date
+            </label>
+
+            <input
+                type="date"
+                id="toDate"
+            >
+
+        </div>
+
+
+        <div class="filter-group">
+
+            <label>
+                Division
+            </label>
+
+            <select id="divisionFilter">
+
+                <option value="">
+                    All Divisions
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="filter-action">
+
+            <button
+                type="button"
+                class="apply-btn"
+                id="applyFilter"
+            >
+                Apply Filter
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         KPI
+    ========================== -->
+
+    <div class="kpi-grid">
+
+        <div class="kpi">
+
+            <div class="kpi-label">
+                Total Sales
+            </div>
+
+            <div
+                class="kpi-value"
+                id="totalSales"
+            >
+                ৳0
+            </div>
+
+            <div class="kpi-sub">
+                Selected period
+            </div>
+
+        </div>
+
+
+        <div class="kpi">
+
+            <div class="kpi-label">
+                Total Target
+            </div>
+
+            <div
+                class="kpi-value"
+                id="totalTarget"
+            >
+                ৳0
+            </div>
+
+            <div class="kpi-sub">
+                Active division target
+            </div>
+
+        </div>
+
+
+        <div class="kpi">
+
+            <div class="kpi-label">
+                Achievement
+            </div>
+
+            <div
+                class="kpi-value red"
+                id="achievement"
+            >
+                0%
+            </div>
+
+            <div class="kpi-sub">
+                Sales vs target
+            </div>
+
+        </div>
+
+
+        <div class="kpi">
+
+            <div class="kpi-label">
+                Remaining
+            </div>
+
+            <div
+                class="kpi-value"
+                id="remaining"
+            >
+                ৳0
+            </div>
+
+            <div class="kpi-sub">
+                Target balance
+            </div>
+
+        </div>
+
+
+        <div class="kpi">
+
+            <div class="kpi-label">
+                Average Daily Sales
+            </div>
+
+            <div
+                class="kpi-value green"
+                id="averageDaily"
+            >
+                ৳0
+            </div>
+
+            <div class="kpi-sub">
+                Working day average
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         TARGET PROGRESS
+    ========================== -->
+
+    <div class="progress-card">
+
+        <div class="progress-header">
+
+            <strong>
+                Overall Target Progress
+            </strong>
+
+            <span id="progressPercent">
+                0%
+            </span>
+
+        </div>
+
+        <div class="progress-track">
+
+            <div
+                class="progress-fill"
+                id="targetProgress"
+            ></div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         CHARTS
+    ========================== -->
+
+    <div class="grid-2">
+
+        <div class="card">
+
+            <div class="card-header">
+
+                <h2>
+                    Sales Trend
+                </h2>
+
+                <span>
+                    Daily sales
+                </span>
+
+            </div>
+
+            <div class="chart-box">
+
+                <canvas id="salesTrendChart"></canvas>
+
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-header">
+
+                <h2>
+                    Target vs Actual
+                </h2>
+
+                <span>
+                    Division performance
+                </span>
+
+            </div>
+
+            <div class="chart-box">
+
+                <canvas id="targetActualChart"></canvas>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         MONTHLY
+    ========================== -->
+
+    <div class="card full">
+
+        <div class="card-header">
+
+            <h2>
+                Monthly Sales Comparison
+            </h2>
+
+            <span>
+                Monthly performance
+            </span>
+
+        </div>
+
+        <div class="chart-box">
+
+            <canvas id="monthlyChart"></canvas>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         DIVISION PERFORMANCE
+    ========================== -->
+
+    <div class="card full">
+
+        <div class="card-header">
+
+            <h2>
+                Division Performance
+            </h2>
+
+            <span>
+                Fixed MAPL division order
+            </span>
+
+        </div>
+
+        <div class="table-wrap">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Division</th>
+                        <th>Sales</th>
+                        <th>Target</th>
+                        <th>Achievement</th>
+                        <th>Remaining</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="divisionTableBody">
+
+                    <tr>
+                        <td colspan="5">
+                            <div class="loading">
+                                Loading...
+                            </div>
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         WORKING DAY
+    ========================== -->
+
+    <div class="card full">
+
+        <div class="card-header">
+
+            <h2>
+                Working Day Analysis
+            </h2>
+
+            <span>
+                Friday excluded
+            </span>
+
+        </div>
+
+        <div class="insights">
+
+            <div class="insight">
+
+                <small>
+                    Working Days
+                </small>
+
+                <strong id="workingDays">
+                    0
+                </strong>
+
+                <p>
+                    Total working days in selected period.
+                </p>
+
+            </div>
+
+
+            <div class="insight">
+
+                <small>
+                    Average / Working Day
+                </small>
+
+                <strong id="workingDayAverage">
+                    ৳0
+                </strong>
+
+                <p>
+                    Average sales generated per working day.
+                </p>
+
+            </div>
+
+
+            <div class="insight">
+
+                <small>
+                    Required / Day
+                </small>
+
+                <strong id="requiredPerDay">
+                    ৳0
+                </strong>
+
+                <p>
+                    Remaining target divided by remaining working days.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         MANAGEMENT INSIGHTS
+    ========================== -->
+
+    <div class="card full">
+
+        <div class="card-header">
+
+            <h2>
+                Management Insights
+            </h2>
+
+            <span>
+                Automated analysis
+            </span>
+
+        </div>
+
+        <div class="insights">
+
+            <div class="insight">
+
+                <small>
+                    Highest Sales Division
+                </small>
+
+                <strong id="highestDivision">
+                    —
+                </strong>
+
+                <p id="highestDivisionText">
+                    Waiting for data.
+                </p>
+
+            </div>
+
+
+            <div class="insight">
+
+                <small>
+                    Performance Status
+                </small>
+
+                <strong id="performanceStatus">
+                    —
+                </strong>
+
+                <p id="performanceText">
+                    Waiting for data.
+                </p>
+
+            </div>
+
+
+            <div class="insight">
+
+                <small>
+                    Selected Records
+                </small>
+
+                <strong id="recordCount">
+                    0
+                </strong>
+
+                <p>
+                    Sales transactions included in this report.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         DATE-WISE DIVISION
+    ========================== -->
+
+    <div class="card full">
+
+        <div class="card-header">
+
+            <h2>
+                Date-wise Division Sales
+            </h2>
+
+            <span>
+                Daily division comparison
+            </span>
+
+        </div>
+
+        <div class="table-wrap">
+
+            <table>
+
+                <thead id="dateDivisionHead">
+
+                    <tr>
+                        <th>Date</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="dateDivisionBody">
+
+                    <tr>
+                        <td>
+                            <div class="loading">
+                                Loading...
+                            </div>
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         SALES RECORDS
+    ========================== -->
+
+    <div class="card full">
+
+        <div class="card-header">
+
+            <h2>
+                Detailed Sales Records
+            </h2>
+
+            <button
+                type="button"
+                class="header-btn"
+                id="exportCSV"
+            >
+                Export CSV
+            </button>
+
+        </div>
+
+        <div class="table-wrap">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Date</th>
+                        <th>Division</th>
+                        <th>Sales Amount</th>
+                        <th>Remarks</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="salesTableBody">
+
+                    <tr>
+
+                        <td colspan="4">
+
+                            <div class="loading">
+                                Loading sales records...
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+<footer>
+
+    © 2026 Modina Auto Parts Ltd.
+    — MAPL Sales Analysis & Management System
+
+</footer>
+
+
+<script>
+
+    /* =====================================================
+       SUPABASE CONFIG
+       ===================================================== */
+
+    const SUPABASE_URL =
+        "https://vvvajmtevlqxmfzfisfm.supabase.co";
+
+    const SUPABASE_ANON_KEY =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2dmFqbXRldmxxeG1memZpc2ZtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA4NDQ3NzYsImV4cCI6MjEwNjQyMDc3Nn0.Ol_Tn6qHuazzaoa6KB-CqQvwm9X6cgO3NgzBtJdjOUg";
+
+    const supabaseClient =
+        window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_ANON_KEY
+        );
+
+
+    /* =====================================================
+       GLOBAL VARIABLES
+       ===================================================== */
+
+    const divisionOrder = [
+        "Dhaka",
+        "Mymensingh",
+        "Chittagong",
+        "Sylhet",
+        "Khulna",
+        "Barishal",
+        "Rajshahi",
+        "Rangpur"
+    ];
+
+    let divisions = [];
+    let salesData = [];
+
+    let salesTrendChart = null;
+    let targetActualChart = null;
+    let monthlyChart = null;
+
+
+    /* =====================================================
+       DOM READY
+       ===================================================== */
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        async function () {
+
+            setDefaultDates();
+
+            setupEvents();
+
+            await initializeDashboard();
+
+        }
+    );
+
+
+    /* =====================================================
+       EVENTS
+       ===================================================== */
+
+    function setupEvents() {
+
+        document
+            .getElementById("applyFilter")
+            ?.addEventListener(
+                "click",
+                initializeDashboard
+            );
+
+
+        document
+            .getElementById("refreshBtn")
+            ?.addEventListener(
+                "click",
+                initializeDashboard
+            );
+
+
+        document
+            .getElementById("exportCSV")
+            ?.addEventListener(
+                "click",
+                exportCSV
+            );
+
+    }
+
+
+    /* =====================================================
+       DEFAULT DATES
+       ===================================================== */
+
+    function setDefaultDates() {
+
+        const today =
+            new Date();
+
+        const firstDay =
+            new Date(
+                today.getFullYear(),
+                today.getMonth(),
+                1
+            );
+
+        document
+            .getElementById("fromDate")
+            .value =
+            formatInputDate(firstDay);
+
+
+        document
+            .getElementById("toDate")
+            .value =
+            formatInputDate(today);
+
+    }
+
+
+    function formatInputDate(date) {
+
+        const y =
+            date.getFullYear();
+
+        const m =
+            String(
+                date.getMonth() + 1
+            ).padStart(2, "0");
+
+        const d =
+            String(
+                date.getDate()
+            ).padStart(2, "0");
+
+        return `${y}-${m}-${d}`;
+
+    }
+
+
+    /* =====================================================
+       INITIALIZE
+       ===================================================== */
+
+    async function initializeDashboard() {
+
+        hideError();
+
+        try {
+
+            await loadDivisions();
+
+            populateDivisionFilter();
+
+            await loadSales();
+
+            renderDashboard();
+
+        } catch (error) {
+
+            console.error(error);
+
+            showError(
+                error.message ||
+                "Unable to load dashboard data."
+            );
+
+        }
+
+    }
+
+
+    /* =====================================================
+       LOAD DIVISIONS
+       ===================================================== */
+
+    async function loadDivisions() {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+                .from("divisions")
+                .select(
+                    "id, division_name, monthly_target, active"
+                )
+                .eq("active", true);
+
+
+        if (error) {
+            throw error;
+        }
+
+
+        divisions =
+            data || [];
+
+
+        divisions.sort(
+            function (a, b) {
+
+                const ai =
+                    divisionOrder.indexOf(
+                        a.division_name
+                    );
+
+                const bi =
+                    divisionOrder.indexOf(
+                        b.division_name
+                    );
+
+                return (
+                    (ai === -1 ? 999 : ai) -
+                    (bi === -1 ? 999 : bi)
+                );
+
+            }
+        );
+
+    }
+
+
+    /* =====================================================
+       DIVISION FILTER
+       ===================================================== */
+
+    function populateDivisionFilter() {
+
+        const select =
+            document.getElementById(
+                "divisionFilter"
+            );
+
+        if (!select) {
+            return;
+        }
+
+        const current =
+            select.value;
+
+        select.innerHTML =
+            `
+            <option value="">
+                All Divisions
+            </option>
+            `;
+
+
+        divisions.forEach(
+            function (division) {
+
+                const option =
+                    document.createElement(
+                        "option"
+                    );
+
+                option.value =
+                    division.id;
+
+                option.textContent =
+                    division.division_name;
+
+                select.appendChild(
+                    option
+                );
+
+            }
+        );
+
+
+        select.value =
+            current;
+
+    }
+
+
+    /* =====================================================
+       LOAD SALES
+       ===================================================== */
+
+    async function loadSales() {
+
+        const fromDate =
+            document.getElementById(
+                "fromDate"
+            ).value;
+
+        const toDate =
+            document.getElementById(
+                "toDate"
+            ).value;
+
+        const divisionId =
+            document.getElementById(
+                "divisionFilter"
+            ).value;
+
+
+        let query =
+            supabaseClient
+                .from("sales")
+                .select(`
+                    id,
+                    sale_date,
+                    sales_amount,
+                    division_id,
+                    remarks,
+                    created_at,
+                    divisions (
+                        id,
+                        division_name,
+                        monthly_target
+                    )
+                `)
+                .gte(
+                    "sale_date",
+                    fromDate
+                )
+                .lte(
+                    "sale_date",
+                    toDate
+                )
+                .order(
+                    "sale_date",
+                    {
+                        ascending: true
+                    }
+                );
+
+
+        if (divisionId) {
+
+            query =
+                query.eq(
+                    "division_id",
+                    divisionId
+                );
+
+        }
+
+
+        const {
+            data,
+            error
+        } =
+            await query;
+
+
+        if (error) {
+            throw error;
+        }
+
+
+        salesData =
+            data || [];
+
+    }
+
+
+    /* =====================================================
+       RENDER DASHBOARD
+       ===================================================== */
+
+    function renderDashboard() {
+
+        renderKPIs();
+
+        renderProgress();
+
+        renderSalesTrend();
+
+        renderTargetActual();
+
+        renderMonthlyChart();
+
+        renderDivisionPerformance();
+
+        renderDateDivision();
+
+        renderWorkingDayAnalysis();
+
+        renderInsights();
+
+        renderSalesTable();
+
+    }
+
+
+    /* =====================================================
+       TOTAL SALES
+       ===================================================== */
+
+    function getTotalSales() {
+
+        return salesData.reduce(
+            function (sum, row) {
+
+                return (
+                    sum +
+                    Number(
+                        row.sales_amount || 0
+                    )
+                );
+
+            },
+            0
+        );
+
+    }
+
+
+    /* =====================================================
+       TOTAL TARGET
+       ===================================================== */
+
+    function getTotalTarget() {
+
+        return divisions.reduce(
+            function (sum, division) {
+
+                return (
+                    sum +
+                    Number(
+                        division.monthly_target || 0
+                    )
+                );
+
+            },
+            0
+        );
+
+    }
+
+
+    /* =====================================================
+       KPI
+       ===================================================== */
+
+    function renderKPIs() {
+
+        const totalSales =
+            getTotalSales();
+
+        const totalTarget =
+            getTotalTarget();
+
+        const achievement =
+            totalTarget > 0
+                ? (totalSales / totalTarget) * 100
+                : 0;
+
+        const remaining =
+            Math.max(
+                totalTarget - totalSales,
+                0
+            );
+
+
+        const workingDays =
+            countWorkingDays(
+                document.getElementById(
+                    "fromDate"
+                ).value,
+                document.getElementById(
+                    "toDate"
+                ).value
+            );
+
+
+        const average =
+            workingDays > 0
+                ? totalSales / workingDays
+                : 0;
+
+
+        document.getElementById(
+            "totalSales"
+        ).textContent =
+            formatCurrency(totalSales);
+
+
+        document.getElementById(
+            "totalTarget"
+        ).textContent =
+            formatCurrency(totalTarget);
+
+
+        document.getElementById(
+            "achievement"
+        ).textContent =
+            formatPercent(achievement);
+
+
+        document.getElementById(
+            "remaining"
+        ).textContent =
+            formatCurrency(remaining);
+
+
+        document.getElementById(
+            "averageDaily"
+        ).textContent =
+            formatCurrency(average);
+
+    }
+
+
+    /* =====================================================
+       PROGRESS
+       ===================================================== */
+
+    function renderProgress() {
+
+        const sales =
+            getTotalSales();
+
+        const target =
+            getTotalTarget();
+
+        const percentage =
+            target > 0
+                ? (sales / target) * 100
+                : 0;
+
+
+        document.getElementById(
+            "progressPercent"
+        ).textContent =
+            formatPercent(percentage);
+
+
+        document.getElementById(
+            "targetProgress"
+        ).style.width =
+            Math.min(
+                percentage,
+                100
+            ) + "%";
+
+    }
+
+
+    /* =====================================================
+       SALES TREND
+       ===================================================== */
+
+    function renderSalesTrend() {
+
+        const canvas =
+            document.getElementById(
+                "salesTrendChart"
+            );
+
+        if (!canvas) {
+            return;
+        }
+
+
+        const grouped = {};
+
+
+        salesData.forEach(
+            function (row) {
+
+                const date =
+                    row.sale_date;
+
+                if (!grouped[date]) {
+                    grouped[date] = 0;
+                }
+
+                grouped[date] +=
+                    Number(
+                        row.sales_amount || 0
+                    );
+
+            }
+        );
+
+
+        const labels =
+            Object.keys(grouped)
+                .sort();
+
+
+        const values =
+            labels.map(
+                function (date) {
+                    return grouped[date];
+                }
+            );
+
+
+        if (salesTrendChart) {
+            salesTrendChart.destroy();
+        }
+
+
+        salesTrendChart =
+            new Chart(
+                canvas,
+                {
+                    type: "line",
+
+                    data: {
+
+                        labels,
+
+                        datasets: [
+                            {
+                                label: "Sales",
+
+                                data: values,
+
+                                borderColor:
+                                    "#e51d2a",
+
+                                backgroundColor:
+                                    "rgba(229,29,42,.10)",
+
+                                fill: true,
+
+                                tension: .35,
+
+                                pointRadius: 3,
+
+                                pointHoverRadius: 5
+                            }
+                        ]
+
+                    },
+
+                    options: {
+
+                        responsive: true,
+
+                        maintainAspectRatio: false,
+
+                        plugins: {
+
+                            legend: {
+                                display: false
+                            }
+
+                        },
+
+                        scales: {
+
+                            y: {
+
+                                beginAtZero: true,
+
+                                ticks: {
+                                    callback:
+                                        function (value) {
+                                            return "৳" +
+                                                Number(value)
+                                                    .toLocaleString(
+                                                        "en-US"
+                                                    );
+                                        }
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+            );
+
+    }
+
+
+    /* =====================================================
+       TARGET VS ACTUAL
+       ===================================================== */
+
+    function renderTargetActual() {
+
+        const canvas =
+            document.getElementById(
+                "targetActualChart"
+            );
+
+        if (!canvas) {
+            return;
+        }
+
+
+        const divisionSales =
+            {};
+
+
+        salesData.forEach(
+            function (row) {
+
+                const name =
+                    row.divisions?.division_name ||
+                    "Unknown";
+
+                if (!divisionSales[name]) {
+                    divisionSales[name] = 0;
+                }
+
+                divisionSales[name] +=
+                    Number(
+                        row.sales_amount || 0
+                    );
+
+            }
+        );
+
+
+        const labels =
+            divisions.map(
+                d => d.division_name
+            );
+
+
+        const actual =
+            labels.map(
+                name =>
+                    divisionSales[name] || 0
+            );
+
+
+        const target =
+            divisions.map(
+                d =>
+                    Number(
+                        d.monthly_target || 0
+                    )
+            );
+
+
+        if (targetActualChart) {
+            targetActualChart.destroy();
+        }
+
+
+        targetActualChart =
+            new Chart(
+                canvas,
+                {
+
+                    type: "bar",
+
+                    data: {
+
+                        labels,
+
+                        datasets: [
+
+                            {
+                                label: "Actual Sales",
+
+                                data: actual,
+
+                                backgroundColor:
+                                    "#e51d2a"
+                            },
+
+                            {
+                                label: "Target",
+
+                                data: target,
+
+                                backgroundColor:
+                                    "#d8d8d8"
+                            }
+
+                        ]
+
+                    },
+
+                    options: {
+
+                        responsive: true,
+
+                        maintainAspectRatio: false,
+
+                        plugins: {
+
+                            legend: {
+                                position: "bottom"
+                            }
+
+                        },
+
+                        scales: {
+
+                            y: {
+                                beginAtZero: true
+                            }
+
+                        }
+
+                    }
+
+                }
+            );
+
+    }
+
+
+    /* =====================================================
+       MONTHLY CHART
+    ===================================================== */
+
+    function renderMonthlyChart() {
+
+        const canvas =
+            document.getElementById(
+                "monthlyChart"
+            );
+
+        if (!canvas) {
+            return;
+        }
+
+
+        const monthly =
+            {};
+
+
+        salesData.forEach(
+            function (row) {
+
+                const month =
+                    String(
+                        row.sale_date
+                    ).slice(0, 7);
+
+                if (!monthly[month]) {
+                    monthly[month] = 0;
+                }
+
+                monthly[month] +=
+                    Number(
+                        row.sales_amount || 0
+                    );
+
+            }
+        );
+
+
+        const labels =
+            Object.keys(monthly)
+                .sort();
+
+
+        const values =
+            labels.map(
+                m => monthly[m]
+            );
+
+
+        if (monthlyChart) {
+            monthlyChart.destroy();
+        }
+
+
+        monthlyChart =
+            new Chart(
+                canvas,
+                {
+
+                    type: "bar",
+
+                    data: {
+
+                        labels,
+
+                        datasets: [
+                            {
+                                label: "Monthly Sales",
+
+                                data: values,
+
+                                backgroundColor:
+                                    "#e51d2a",
+
+                                borderRadius: 5
+                            }
+                        ]
+
+                    },
+
+                    options: {
+
+                        responsive: true,
+
+                        maintainAspectRatio: false,
+
+                        plugins: {
+
+                            legend: {
+                                display: false
+                            }
+
+                        },
+
+                        scales: {
+
+                            y: {
+                                beginAtZero: true
+                            }
+
+                        }
+
+                    }
+
+                }
+            );
+
+    }
+
+
+    /* =====================================================
+       DIVISION PERFORMANCE
+    ===================================================== */
+
+    function renderDivisionPerformance() {
+
+        const tbody =
+            document.getElementById(
+                "divisionTableBody"
+            );
+
+
+        const salesByDivision =
+            {};
+
+
+        salesData.forEach(
+            function (row) {
+
+                const id =
+                    row.division_id;
+
+                if (!salesByDivision[id]) {
+                    salesByDivision[id] = 0;
+                }
+
+                salesByDivision[id] +=
+                    Number(
+                        row.sales_amount || 0
+                    );
+
+            }
+        );
+
+
+        tbody.innerHTML = "";
+
+
+        divisions.forEach(
+            function (division) {
+
+                const sales =
+                    salesByDivision[
+                        division.id
+                    ] || 0;
+
+                const target =
+                    Number(
+                        division.monthly_target || 0
+                    );
+
+                const achievement =
+                    target > 0
+                        ? (sales / target) * 100
+                        : 0;
+
+                const remaining =
+                    Math.max(
+                        target - sales,
+                        0
+                    );
+
+
+                const tr =
+                    document.createElement(
+                        "tr"
+                    );
+
+
+                tr.innerHTML = `
+
+                    <td>
+                        <span class="division-badge">
+                            ${escapeHtml(
+                                division.division_name
+                            )}
+                        </span>
+                    </td>
+
+                    <td class="amount">
+                        ${formatCurrency(sales)}
+                    </td>
+
+                    <td>
+                        ${formatCurrency(target)}
+                    </td>
+
+                    <td>
+                        ${formatPercent(achievement)}
+                    </td>
+
+                    <td>
+                        ${formatCurrency(remaining)}
+                    </td>
+
+                `;
+
+
+                tbody.appendChild(tr);
+
+            }
+        );
+
+    }
+
+
+    /* =====================================================
+       DATE DIVISION
+    ===================================================== */
+
+    function renderDateDivision() {
+
+        const head =
+            document.getElementById(
+                "dateDivisionHead"
+            );
+
+        const body =
+            document.getElementById(
+                "dateDivisionBody"
+            );
+
+
+        head.innerHTML =
+            "<tr><th>Date</th></tr>";
+
+
+        divisionOrder.forEach(
+            function (name) {
+
+                const division =
+                    divisions.find(
+                        d =>
+                            d.division_name === name
+                    );
+
+
+                if (division) {
+
+                    const th =
+                        document.createElement(
+                            "th"
+                        );
+
+                    th.textContent =
+                        name;
+
+                    head.querySelector(
+                        "tr"
+                    ).appendChild(th);
+
+                }
+
+            }
+        );
+
+
+        const grouped = {};
+
+
+        salesData.forEach(
+            function (row) {
+
+                const date =
+                    row.sale_date;
+
+                const division =
+                    row.divisions?.division_name ||
+                    "Unknown";
+
+
+                if (!grouped[date]) {
+                    grouped[date] = {};
+                }
+
+                if (!grouped[date][division]) {
+                    grouped[date][division] = 0;
+                }
+
+                grouped[date][division] +=
+                    Number(
+                        row.sales_amount || 0
+                    );
+
+            }
+        );
+
+
+        body.innerHTML = "";
+
+
+        Object.keys(grouped)
+            .sort()
+            .forEach(
+                function (date) {
+
+                    const tr =
+                        document.createElement(
+                            "tr"
+                        );
+
+
+                    let html =
+                        `<td>
+                            ${formatDate(date)}
+                        </td>`;
+
+
+                    divisionOrder.forEach(
+                        function (name) {
+
+                            const value =
+                                grouped[date][name] ||
+                                0;
+
+
+                            html +=
+                                `<td>
+                                    ${value > 0
+                                        ? formatCurrency(value)
+                                        : "—"
+                                    }
+                                </td>`;
+
+                        }
+                    );
+
+
+                    tr.innerHTML =
+                        html;
+
+
+                    body.appendChild(
+                        tr
+                    );
+
+                }
+            );
+
+
+        if (
+            !body.children.length
+        ) {
+
+            body.innerHTML =
+                `
+                <tr>
+                    <td colspan="9">
+                        <div class="loading">
+                            No data found.
+                        </div>
+                    </td>
+                </tr>
+                `;
+
+        }
+
+    }
+
+
+    /* =====================================================
+       WORKING DAY ANALYSIS
+    ===================================================== */
+
+    function renderWorkingDayAnalysis() {
+
+        const from =
+            document.getElementById(
+                "fromDate"
+            ).value;
+
+        const to =
+            document.getElementById(
+                "toDate"
+            ).value;
+
+
+        const workingDays =
+            countWorkingDays(
+                from,
+                to
+            );
+
+
+        const sales =
+            getTotalSales();
+
+
+        const average =
+            workingDays > 0
+                ? sales / workingDays
+                : 0;
+
+
+        const target =
+            getTotalTarget();
+
+
+        const remaining =
+            Math.max(
+                target - sales,
+                0
+            );
+
+
+        const requiredPerDay =
+            workingDays > 0
+                ? remaining / workingDays
+                : 0;
+
+
+        document.getElementById(
+            "workingDays"
+        ).textContent =
+            workingDays;
+
+
+        document.getElementById(
+            "workingDayAverage"
+        ).textContent =
+            formatCurrency(
+                average
+            );
+
+
+        document.getElementById(
+            "requiredPerDay"
+        ).textContent =
+            formatCurrency(
+                requiredPerDay
+            );
+
+    }
+
+
+    function countWorkingDays(
+        from,
+        to
+    ) {
+
+        if (!from || !to) {
+            return 0;
+        }
+
+
+        const start =
+            new Date(
+                from + "T00:00:00"
+            );
+
+        const end =
+            new Date(
+                to + "T00:00:00"
+            );
+
+
+        let count = 0;
+
+        const current =
+            new Date(start);
+
+
+        while (
+            current <= end
+        ) {
+
+            /*
+             * Friday = 5
+             */
+
+            if (
+                current.getDay() !== 5
+            ) {
+                count++;
+            }
+
+            current.setDate(
+                current.getDate() + 1
+            );
+
+        }
+
+
+        return count;
+
+    }
+
+
+    /* =====================================================
+       INSIGHTS
+    ===================================================== */
+
+    function renderInsights() {
+
+        const sales =
+            getTotalSales();
+
+        const target =
+            getTotalTarget();
+
+        const achievement =
+            target > 0
+                ? (sales / target) * 100
+                : 0;
+
+
+        const divisionSales =
+            {};
+
+
+        salesData.forEach(
+            function (row) {
+
+                const name =
+                    row.divisions?.division_name ||
+                    "Unknown";
+
+                if (!divisionSales[name]) {
+                    divisionSales[name] = 0;
+                }
+
+                divisionSales[name] +=
+                    Number(
+                        row.sales_amount || 0
+                    );
+
+            }
+        );
+
+
+        let highestName =
+            "—";
+
+        let highestSales =
+            0;
+
+
+        Object.keys(
+            divisionSales
+        ).forEach(
+            function (name) {
+
+                if (
+                    divisionSales[name] >
+                    highestSales
+                ) {
+
+                    highestSales =
+                        divisionSales[name];
+
+                    highestName =
+                        name;
+
+                }
+
+            }
+        );
+
+
+        document.getElementById(
+            "highestDivision"
+        ).textContent =
+            highestName;
+
+
+        document.getElementById(
+            "highestDivisionText"
+        ).textContent =
+            highestName === "—"
+                ? "No sales data available."
+                : `${formatCurrency(
+                    highestSales
+                )} sales in selected period.`;
+
+
+        document.getElementById(
+            "recordCount"
+        ).textContent =
+            salesData.length;
+
+
+        let status =
+            "No Target";
+
+
+        if (target > 0) {
+
+            if (achievement >= 100) {
+                status = "Target Achieved";
+            } else if (achievement >= 75) {
+                status = "Strong Progress";
+            } else if (achievement >= 50) {
+                status = "Moderate Progress";
+            } else {
+                status = "Needs Attention";
+            }
+
+        }
+
+
+        document.getElementById(
+            "performanceStatus"
+        ).textContent =
+            status;
+
+
+        document.getElementById(
+            "performanceText"
+        ).textContent =
+            target > 0
+                ? `${formatPercent(
+                    achievement
+                )} of the selected target achieved.`
+                : "No target available.";
+
+    }
+
+
+    /* =====================================================
+       SALES TABLE
+    ===================================================== */
+
+    function renderSalesTable() {
+
+        const tbody =
+            document.getElementById(
+                "salesTableBody"
+            );
+
+
+        tbody.innerHTML = "";
+
+
+        const sorted =
+            [...salesData]
+                .sort(
+                    function (a, b) {
+
+                        return String(b.sale_date)
+                            .localeCompare(
+                                String(a.sale_date)
+                            );
+
+                    }
+                );
+
+
+        sorted.forEach(
+            function (row) {
+
+                const tr =
+                    document.createElement(
+                        "tr"
+                    );
+
+
+                const division =
+                    row.divisions?.division_name ||
+                    "—";
+
+
+                tr.innerHTML = `
+
+                    <td>
+                        ${formatDate(
+                            row.sale_date
+                        )}
+                    </td>
+
+                    <td>
+                        <span class="division-badge">
+                            ${escapeHtml(
+                                division
+                            )}
+                        </span>
+                    </td>
+
+                    <td class="amount">
+                        ${formatCurrency(
+                            Number(
+                                row.sales_amount || 0
+                            )
+                        )}
+                    </td>
+
+                    <td>
+                        ${escapeHtml(
+                            row.remarks || "—"
+                        )}
+                    </td>
+
+                `;
+
+
+                tbody.appendChild(tr);
+
+            }
+        );
+
+
+        if (
+            !sorted.length
+        ) {
+
+            tbody.innerHTML =
+                `
+                <tr>
+                    <td colspan="4">
+                        <div class="loading">
+                            No sales records found.
+                        </div>
+                    </td>
+                </tr>
+                `;
+
+        }
+
+    }
+
+
+    /* =====================================================
+       CSV EXPORT
+    ===================================================== */
+
+    function exportCSV() {
+
+        if (!salesData.length) {
+
+            alert(
+                "No sales records available."
+            );
+
+            return;
+
+        }
+
+
+        let csv =
+            "Date,Division,Sales Amount,Remarks\n";
+
+
+        salesData.forEach(
+            function (row) {
+
+                const division =
+                    row.divisions?.division_name ||
+                    "";
+
+
+                const remarks =
+                    String(
+                        row.remarks || ""
+                    )
+                    .replace(
+                        /"/g,
+                        '""'
+                    );
+
+
+                csv +=
+                    `"${row.sale_date}",` +
+                    `"${division}",` +
+                    `"${row.sales_amount || 0}",` +
+                    `"${remarks}"\n`;
+
+            }
+        );
+
+
+        const blob =
+            new Blob(
+                [csv],
+                {
+                    type:
+                        "text/csv;charset=utf-8;"
+                }
+            );
+
+
+        const url =
+            URL.createObjectURL(
+                blob
+            );
+
+
+        const link =
+            document.createElement(
+                "a"
+            );
+
+        link.href =
+            url;
+
+        link.download =
+            `MAPL-Sales-Report-${getTodayString()}.csv`;
+
+        document.body.appendChild(
+            link
+        );
+
+        link.click();
+
+        link.remove();
+
+        URL.revokeObjectURL(
+            url
+        );
+
+    }
+
+
+    /* =====================================================
+       HELPERS
+    ===================================================== */
+
+    function formatCurrency(
+        amount
+    ) {
+
+        return (
+            "৳" +
+            Number(
+                amount || 0
+            ).toLocaleString(
+                "en-US",
+                {
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0
+                }
+            )
+        );
+
+    }
+
+
+    function formatPercent(
+        value
+    ) {
+
+        return (
+            Number(
+                value || 0
+            ).toFixed(2) +
+            "%"
+        );
+
+    }
+
+
+    function formatDate(
+        date
+    ) {
+
+        if (!date) {
+            return "—";
+        }
+
+
+        const d =
+            new Date(
+                date + "T00:00:00"
+            );
+
+
+        return d.toLocaleDateString(
+            "en-GB",
+            {
+                day: "2-digit",
+                month: "short",
+                year: "numeric"
+            }
+        );
+
+    }
+
+
+    function getTodayString() {
+
+        return formatInputDate(
+            new Date()
+        );
+
+    }
+
+
+    function escapeHtml(
+        value
+    ) {
+
+        return String(
+            value ?? ""
+        )
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+    }
+
+
+    function showError(
+        message
+    ) {
+
+        const box =
+            document.getElementById(
+                "errorMessage"
+            );
+
+        box.textContent =
+            message;
+
+        box.style.display =
+            "block";
+
+    }
+
+
+    function hideError() {
+
+        const box =
+            document.getElementById(
+                "errorMessage"
+            );
+
+        box.style.display =
+            "none";
+
+    }
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MAPL | Brand & Division Target Report</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/division-brand-target-report.css"
+    >
+</head>
+
+<body>
+
+<div class="page-shell">
+
+    <!-- =====================================================
+         PUBLIC HEADER
+         ===================================================== -->
+
+    <header class="topbar">
+
+        <div class="brand-area">
+
+            <img
+                src="https://modinaautopartsltd.com/_next/static/media/logo.40df2f61.svg"
+                alt="MAPL Logo"
+                class="logo"
+                onerror="this.style.display='none'"
+            >
+
+            <div>
+
+                <h1>
+                    MAPL Sales Analysis
+                </h1>
+
+                <p>
+                    Brand & Division Target Report
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="top-actions">
+  <a href="index.html" class="nav-item">
+                Home
+            </a>
+            <span class="public-badge">
+                CUSTOMIZE FILTERING
+            </span>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         MAIN
+         ===================================================== -->
+
+    <main class="container">
+
+
+        <!-- =================================================
+             PAGE HEADING
+             ================================================= -->
+
+        <section class="page-heading">
+
+            <div>
+
+                <h2>
+                    Brand & Division Target Report
+                </h2>
+
+                <p>
+                    Customize your target vs actual sales report
+                    using date, division, brand and status filters.
+                </p>
+
+            </div>
+
+
+            <div class="heading-actions">
+
+                <button
+                    id="exportCsvBtn"
+                    class="btn btn-outline"
+                >
+                    Export CSV
+                </button>
+
+
+                <button
+                    id="printBtn"
+                    class="btn btn-primary"
+                >
+                    Print Report
+                </button>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             FILTERS
+             ================================================= -->
+
+        <section class="filter-card">
+
+            <div class="section-title">
+
+                <div>
+
+                    <h3>
+                        Report Filters
+                    </h3>
+
+                    <p>
+                        Select any combination to customize the report.
+                    </p>
+
+                </div>
+
+
+                <span
+                    id="filterStatus"
+                    class="filter-badge"
+                >
+                    Ready
+                </span>
+
+            </div>
+
+
+
+            <div class="filter-grid">
+
+
+                <!-- FROM DATE -->
+
+                <div class="field">
+
+                    <label for="fromDate">
+                        From Date
+                    </label>
+
+                    <input
+                        type="date"
+                        id="fromDate"
+                    >
+
+                </div>
+
+
+
+                <!-- TO DATE -->
+
+                <div class="field">
+
+                    <label for="toDate">
+                        To Date
+                    </label>
+
+                    <input
+                        type="date"
+                        id="toDate"
+                    >
+
+                </div>
+
+
+
+                <!-- DIVISION -->
+
+                <div class="field">
+
+                    <label for="divisionFilter">
+                        Division
+                    </label>
+
+                    <select id="divisionFilter">
+
+                        <option value="">
+                            All Divisions
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- BRAND -->
+
+                <div class="field">
+
+                    <label for="brandFilter">
+                        Brand
+                    </label>
+
+                    <select id="brandFilter">
+
+                        <option value="">
+                            All Brands
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- STATUS -->
+
+                <div class="field">
+
+                    <label for="statusFilter">
+                        Achievement Status
+                    </label>
+
+                    <select id="statusFilter">
+
+                        <option value="">
+                            All Status
+                        </option>
+
+                        <option value="achieved">
+                            Achieved (100%+)
+                        </option>
+
+                        <option value="near">
+                            Near Target (80–99.99%)
+                        </option>
+
+                        <option value="under">
+                            Under Target (&lt;80%)
+                        </option>
+
+                        <option value="no-target">
+                            No Target
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- REPORT VIEW -->
+
+                <div class="field">
+
+                    <label for="reportView">
+                        Report View
+                    </label>
+
+                    <select id="reportView">
+
+                        <option value="detail">
+                            Division & Brand Detail
+                        </option>
+
+                        <option value="division">
+                            Division Summary
+                        </option>
+
+                        <option value="brand">
+                            Brand Summary
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- FILTER ACTIONS -->
+
+            <div class="filter-actions">
+
+                <button
+                    id="applyBtn"
+                    class="btn btn-primary"
+                >
+                    Apply Filter
+                </button>
+
+
+                <button
+                    id="resetBtn"
+                    class="btn btn-light"
+                >
+                    Reset
+                </button>
+
+
+                <span
+                    id="lastUpdated"
+                    class="last-updated"
+                ></span>
+
+            </div>
+
+
+            <div
+                id="messageBox"
+                class="message-box hidden"
+            ></div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             KPI CARDS
+             ================================================= -->
+
+        <section class="kpi-grid">
+
+
+            <div class="kpi-card">
+
+                <div class="kpi-label">
+                    Total Target
+                </div>
+
+                <div
+                    class="kpi-value"
+                    id="totalTarget"
+                >
+                    ৳0
+                </div>
+
+                <div class="kpi-note">
+                    Selected date range
+                </div>
+
+            </div>
+
+
+
+            <div class="kpi-card">
+
+                <div class="kpi-label">
+                    Actual Sales
+                </div>
+
+                <div
+                    class="kpi-value"
+                    id="totalActual"
+                >
+                    ৳0
+                </div>
+
+                <div class="kpi-note">
+                    Selected date range
+                </div>
+
+            </div>
+
+
+
+            <div class="kpi-card">
+
+                <div class="kpi-label">
+                    Achievement
+                </div>
+
+                <div
+                    class="kpi-value"
+                    id="achievementPercent"
+                >
+                    0.00%
+                </div>
+
+                <div
+                    class="kpi-note"
+                    id="achievementNote"
+                >
+                    Against target
+                </div>
+
+            </div>
+
+
+
+            <div class="kpi-card">
+
+                <div class="kpi-label">
+                    Remaining
+                </div>
+
+                <div
+                    class="kpi-value"
+                    id="remainingTarget"
+                >
+                    ৳0
+                </div>
+
+                <div class="kpi-note">
+                    Target balance
+                </div>
+
+            </div>
+
+
+
+            <div class="kpi-card">
+
+                <div class="kpi-label">
+                    Divisions
+                </div>
+
+                <div
+                    class="kpi-value"
+                    id="divisionCount"
+                >
+                    0
+                </div>
+
+                <div class="kpi-note">
+                    Included in report
+                </div>
+
+            </div>
+
+
+
+            <div class="kpi-card">
+
+                <div class="kpi-label">
+                    Brands
+                </div>
+
+                <div
+                    class="kpi-value"
+                    id="brandCount"
+                >
+                    0
+                </div>
+
+                <div class="kpi-note">
+                    Included in report
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             CHARTS
+             ================================================= -->
+
+        <section class="chart-grid">
+
+
+            <!-- DIVISION CHART -->
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <h3>
+                            Division Target vs Actual
+                        </h3>
+
+                        <p>
+                            Performance by division
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="chart-wrap">
+
+                    <canvas
+                        id="divisionChart"
+                    ></canvas>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- BRAND CHART -->
+
+            <div class="panel">
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <h3>
+                            Brand Target vs Actual
+                        </h3>
+
+                        <p>
+                            Performance by brand
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="chart-wrap">
+
+                    <canvas
+                        id="brandChart"
+                    ></canvas>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             REPORT TABLE
+             ================================================= -->
+
+        <section
+            class="panel report-panel"
+            id="detailSection"
+        >
+
+            <div class="panel-header">
+
+                <div>
+
+                    <h3 id="tableTitle">
+                        Division & Brand Detail
+                    </h3>
+
+                    <p id="tableSubtitle">
+                        Target, actual sales, achievement and remaining target
+                    </p>
+
+                </div>
+
+
+                <span
+                    id="rowCount"
+                    class="count-badge"
+                >
+                    0 rows
+                </span>
+
+            </div>
+
+
+            <div class="table-scroll">
+
+                <table class="report-table">
+
+                    <thead id="reportHead"></thead>
+
+                    <tbody id="reportBody"></tbody>
+
+                    <tfoot id="reportFoot"></tfoot>
+
+                </table>
+
+            </div>
+
+
+            <div
+                id="emptyState"
+                class="empty-state hidden"
+            >
+
+                <div class="empty-icon">
+                    ∅
+                </div>
+
+                <h3>
+                    No report data found
+                </h3>
+
+                <p>
+                    Try changing the date range,
+                    division, brand or status filter.
+                </p>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             MANAGEMENT INSIGHTS
+             ================================================= -->
+
+        <section class="panel insights-panel">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <h3>
+                        Management Insights
+                    </h3>
+
+                    <p>
+                        Automatically generated from the filtered report
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div
+                id="insightsGrid"
+                class="insights-grid"
+            ></div>
+
+        </section>
+
+
+    </main>
+
+
+
+    <!-- =====================================================
+         FOOTER
+         ===================================================== -->
+
+    <footer class="footer">
+
+        <span>
+            MAPL Sales Analysis System
+        </span>
+
+        <span>
+            Public Brand & Division Target Monitoring
+        </span>
+
+    </footer>
+
+
+</div>
+
+
+
+<!-- =========================================================
+     LIBRARIES
+     ========================================================= -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="js/config.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+
+<script src="js/division-brand-target-report.js"></script>
+
+
+</body>
+</html>

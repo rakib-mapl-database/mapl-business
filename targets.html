@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>MAPL Sales Analysis | Target Management</title>
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+</head>
+
+
+<body>
+
+<div class="app">
+
+
+    <!-- =========================================
+         SIDEBAR
+    ========================================== -->
+
+    <aside class="sidebar">
+
+
+        <!-- BRAND -->
+
+        <div class="brand">
+
+            <div class="logo-box">
+
+                <img
+                    src="https://modinaautopartsltd.com/_next/static/media/logo.40df2f61.svg"
+                    alt="Modina Auto Parts Ltd."
+                >
+
+            </div>
+
+
+            <div>
+
+                <strong>
+                    Sales Analysis
+                </strong>
+
+                <small>
+                    Management System
+                </small>
+
+            </div>
+
+        </div>
+
+
+        <!-- NAVIGATION -->
+
+        <nav class="sidebar-nav">
+
+
+            <a
+                href="admin.html"
+                class="nav-item"
+            >
+                Dashboard
+            </a>
+
+
+            <a
+                href="admin.html#salesRecords"
+                class="nav-item"
+            >
+                Sales Records
+            </a>
+
+
+            <a
+                href="reports.html"
+                class="nav-item"
+            >
+                Reports
+            </a>
+
+
+            <a
+                href="targets.html"
+                class="nav-item active"
+            >
+                Targets
+            </a>
+<a href="brand-targets.html" class="nav-item">Brand Targets</a>
+
+            <a
+                href="divisions.html"
+                class="nav-item"
+            >
+                Divisions
+            </a>
+
+
+        </nav>
+
+
+        <!-- SIDEBAR BOTTOM -->
+
+        <div class="sidebar-bottom">
+
+              <button
+                type="button"
+                id="logoutBtn"
+                class="logout-button"
+            >
+                Sign Out
+            </button>
+        </div>
+
+
+    </aside>
+
+
+
+    <!-- =========================================
+         MAIN CONTENT
+    ========================================== -->
+
+    <main class="main-content">
+
+
+        <!-- TOPBAR -->
+
+        <header class="topbar">
+
+
+            <div>
+
+                <h1>
+                    Target Management
+                </h1>
+
+                <p>
+                    Manage monthly sales targets by division
+                </p>
+
+            </div>
+
+
+            <!-- USER -->
+
+            <div class="user-info">
+
+
+                <div class="user-avatar">
+
+                    A
+
+                </div>
+
+
+                <div>
+
+                    <strong id="userName">
+                        Administrator
+                    </strong>
+
+                    <small id="userRole">
+                        ADMIN
+                    </small>
+
+                </div>
+
+
+            </div>
+
+
+        </header>
+
+
+
+        <!-- =========================================
+             KPI CARDS
+        ========================================== -->
+
+        <section class="kpi-grid">
+
+
+            <!-- TOTAL TARGET -->
+
+            <div class="kpi-card">
+
+                <span>
+                    Total Monthly Target
+                </span>
+
+                <strong id="totalTarget">
+                    ৳0
+                </strong>
+
+            </div>
+
+
+            <!-- ACTIVE DIVISIONS -->
+
+            <div class="kpi-card">
+
+                <span>
+                    Active Divisions
+                </span>
+
+                <strong id="activeDivisions">
+                    0
+                </strong>
+
+            </div>
+
+
+            <!-- AVERAGE -->
+
+            <div class="kpi-card">
+
+                <span>
+                    Average Target
+                </span>
+
+                <strong id="averageTarget">
+                    ৳0
+                </strong>
+
+            </div>
+
+
+            <!-- STATUS -->
+
+            <div class="kpi-card">
+
+                <span>
+                    Target Status
+                </span>
+
+                <strong id="targetStatus">
+                    Active
+                </strong>
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =========================================
+             TARGET MANAGEMENT
+        ========================================== -->
+
+        <section class="dashboard-card">
+
+
+            <!-- SECTION HEADER -->
+
+            <div class="section-header">
+
+
+                <div>
+
+                    <h2>
+                        Division-wise Monthly Target
+                    </h2>
+
+                    <p>
+                        Update the monthly sales target for each division
+                    </p>
+
+                </div>
+
+
+                <div>
+
+                    <button
+                        type="button"
+                        id="saveAllTargetsBtn"
+                        class="primary-button"
+                    >
+                        Save All Targets
+                    </button>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- MESSAGE -->
+
+            <div
+                id="targetMessage"
+                class="target-message"
+            ></div>
+
+
+
+            <!-- TABLE -->
+
+            <div class="table-container">
+
+
+                <table class="target-table">
+
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                #
+                            </th>
+
+                            <th>
+                                Division
+                            </th>
+
+                            <th>
+                                Current Target
+                            </th>
+
+                            <th>
+                                New Monthly Target
+                            </th>
+
+                            <th>
+                                Change
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="targetTableBody">
+
+
+                        <tr>
+
+                            <td
+                                colspan="6"
+                                style="text-align:center;"
+                            >
+                                Loading target data...
+                            </td>
+
+                        </tr>
+
+
+                    </tbody>
+
+
+                </table>
+
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =========================================
+             MANAGEMENT NOTE
+        ========================================== -->
+
+        <section class="dashboard-card">
+
+
+            <div class="section-header">
+
+
+                <div>
+
+                    <h2>
+                        Management Note
+                    </h2>
+
+                    <p>
+                        Target management information
+                    </p>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="management-note">
+
+
+                <p>
+
+                    Monthly targets are maintained separately
+                    for each active division. Changes made here
+                    will be reflected in the Sales Dashboard
+                    target calculations.
+
+                </p>
+
+
+                <p>
+
+                    Please verify the target amount before
+                    saving. All target changes are recorded
+                    for management tracking.
+
+                </p>
+
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =========================================
+             LAST UPDATED
+        ========================================== -->
+
+        <section class="dashboard-card">
+
+
+            <div class="section-header">
+
+
+                <div>
+
+                    <h2>
+                        Target Information
+                    </h2>
+
+                    <p>
+                        Current target management status
+                    </p>
+
+                </div>
+
+
+            </div>
+
+
+            <div class="info-grid">
+
+
+                <div class="info-item">
+
+                    <span>
+                        Last Updated
+                    </span>
+
+                    <strong id="lastUpdated">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="info-item">
+
+                    <span>
+                        Total Divisions
+                    </span>
+
+                    <strong id="totalDivisions">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div class="info-item">
+
+                    <span>
+                        Active Target
+                    </span>
+
+                    <strong id="activeTargetAmount">
+                        ৳0
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+
+</div>
+
+
+
+<!-- =========================================
+     SCRIPTS
+========================================== -->
+
+<script src="js/config.js"></script>
+
+<script src="js/targets.js"></script>
+
+
+</body>
+
+</html>

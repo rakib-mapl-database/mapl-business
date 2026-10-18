@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MAPL Sales Analysis | Reports</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="logo-box">
+                <img
+                    src="https://modinaautopartsltd.com/_next/static/media/logo.40df2f61.svg"
+                    alt="Modina Auto Parts Ltd."
+                >
+            </div>
+
+            <div>
+                <strong>Sales Analysis</strong>
+                <small>Management System</small>
+            </div>
+
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+            <a href="admin.html" class="nav-item">
+                Dashboard
+            </a>
+
+            <a href="admin.html#salesRecords" class="nav-item">
+                Sales Records
+            </a>
+
+            <a href="reports.html" class="nav-item active">
+                Reports Division Wise
+            </a>
+
+            <a href="targets.html" class="nav-item">
+                Targets
+            </a>
+<a href="brand-targets.html" class="nav-item">Brand Targets</a>
+            <a href="admin.html#divisionPerformance" class="nav-item">
+                Divisions Performance
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+               <button
+                type="button"
+                id="logoutBtn"
+                class="logout-button"
+            >
+                Sign Out
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- ================= MAIN CONTENT ================= -->
+
+    <main class="main-content">
+
+        <!-- TOP BAR -->
+
+        <header class="topbar">
+
+            <div>
+
+                <h1>Sales Reports</h1>
+
+                <p>
+                    Detailed sales performance and management reports
+                </p>
+
+            </div>
+
+
+            <div class="user-info">
+
+                <div class="user-avatar">
+                    A
+                </div>
+
+                <div>
+
+                    <strong id="userName">
+                        Administrator
+                    </strong>
+
+                    <small id="userRole">
+                        ADMIN
+                    </small>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- ================= FILTER ================= -->
+
+        <section class="dashboard-card report-filter-card">
+
+            <div class="section-header">
+
+                <div>
+
+                    <h2>Report Filters</h2>
+
+                    <p>
+                        Select the reporting period and division
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="report-filter-grid">
+
+                <div class="filter-group">
+
+                    <label for="fromDate">
+                        From Date
+                    </label>
+
+                    <input
+                        type="date"
+                        id="fromDate"
+                    >
+
+                </div>
+
+
+                <div class="filter-group">
+
+                    <label for="toDate">
+                        To Date
+                    </label>
+
+                    <input
+                        type="date"
+                        id="toDate"
+                    >
+
+                </div>
+
+
+                <div class="filter-group">
+
+                    <label for="divisionFilter">
+                        Division
+                    </label>
+
+                    <select id="divisionFilter">
+
+                        <option value="">
+                            All Divisions
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="filter-actions">
+
+                    <button
+                        type="button"
+                        id="applyReportFilter"
+                        class="primary-button"
+                    >
+                        Generate Report
+                    </button>
+
+
+                    <button
+                        type="button"
+                        id="resetReportFilter"
+                        class="secondary-button"
+                    >
+                        Reset
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= KPI ================= -->
+
+        <section class="kpi-grid">
+
+            <div class="kpi-card">
+
+                <span>
+                    Total Sales
+                </span>
+
+                <strong id="reportTotalSales">
+                    ৳0
+                </strong>
+
+            </div>
+
+
+            <div class="kpi-card">
+
+                <span>
+                    Total Target
+                </span>
+
+                <strong id="reportTotalTarget">
+                    ৳0
+                </strong>
+
+            </div>
+
+
+            <div class="kpi-card">
+
+                <span>
+                    Achievement
+                </span>
+
+                <strong id="reportAchievement">
+                    0.00%
+                </strong>
+
+            </div>
+
+
+            <div class="kpi-card">
+
+                <span>
+                    Remaining
+                </span>
+
+                <strong id="reportRemaining">
+                    ৳0
+                </strong>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= PERIOD INFO ================= -->
+
+        <section class="dashboard-card">
+
+            <div class="section-header">
+
+                <div>
+
+                    <h2>Report Period</h2>
+
+                    <p>
+                        Current report selection
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="info-grid">
+
+                <div class="info-item">
+
+                    <span>
+                        From Date
+                    </span>
+
+                    <strong id="reportFromDate">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="info-item">
+
+                    <span>
+                        To Date
+                    </span>
+
+                    <strong id="reportToDate">
+                        —
+                    </strong>
+
+                </div>
+
+
+                <div class="info-item">
+
+                    <span>
+                        Total Transactions
+                    </span>
+
+                    <strong id="reportTransactions">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= DIVISION REPORT ================= -->
+
+        <section class="dashboard-card">
+
+            <div class="section-header">
+
+                <div>
+
+                    <h2>
+                        Division-wise Performance
+                    </h2>
+
+                    <p>
+                        Sales, target and achievement by division
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="table-container">
+
+                <table class="report-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                #
+                            </th>
+
+                            <th>
+                                Division
+                            </th>
+
+                            <th>
+                                Sales
+                            </th>
+
+                            <th>
+                                Target
+                            </th>
+
+                            <th>
+                                Achievement
+                            </th>
+
+                            <th>
+                                Remaining
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="divisionReportBody">
+
+                        <tr>
+
+                            <td
+                                colspan="6"
+                                style="text-align:center;"
+                            >
+                                Loading report...
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= MONTHLY REPORT ================= -->
+
+        <section class="dashboard-card">
+
+            <div class="section-header">
+
+                <div>
+
+                    <h2>
+                        Monthly Sales Summary
+                    </h2>
+
+                    <p>
+                        Monthly sales performance within the selected period
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="table-container">
+
+                <table class="report-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                #
+                            </th>
+
+                            <th>
+                                Month
+                            </th>
+
+                            <th>
+                                Sales
+                            </th>
+
+                            <th>
+                                Transactions
+                            </th>
+
+                            <th>
+                                Average Sale
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="monthlyReportBody">
+
+                        <tr>
+
+                            <td
+                                colspan="5"
+                                style="text-align:center;"
+                            >
+                                Loading report...
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= DATE REPORT ================= -->
+
+        <section class="dashboard-card">
+
+            <div class="section-header">
+
+                <div>
+
+                    <h2>
+                        Daily Sales Summary
+                    </h2>
+
+                    <p>
+                        Date-wise sales transaction summary
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="table-container">
+
+                <table class="report-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                #
+                            </th>
+
+                            <th>
+                                Date
+                            </th>
+
+                            <th>
+                                Sales
+                            </th>
+
+                            <th>
+                                Transactions
+                            </th>
+
+                            <th>
+                                Average Sale
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="dailyReportBody">
+
+                        <tr>
+
+                            <td
+                                colspan="5"
+                                style="text-align:center;"
+                            >
+                                Loading report...
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= MANAGEMENT SUMMARY ================= -->
+
+        <section class="dashboard-card">
+
+            <div class="section-header">
+
+                <div>
+
+                    <h2>
+                        Management Summary
+                    </h2>
+
+                    <p>
+                        Automated report observations
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div
+                id="managementSummary"
+                class="management-note"
+            >
+
+                Loading management summary...
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= EXPORT ================= -->
+
+        <section class="dashboard-card">
+
+            <div class="section-header">
+
+                <div>
+
+                    <h2>
+                        Export Report
+                    </h2>
+
+                    <p>
+                        Download the current report data
+                    </p>
+
+                </div>
+
+
+                <div>
+
+                    <button
+                        type="button"
+                        id="exportReportCSV"
+                        class="primary-button"
+                    >
+                        Export CSV
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+</div>
+
+
+
+<!-- ================= SCRIPTS ================= -->
+
+<script src="js/config.js"></script>
+<script src="js/reports.js"></script>
+
+
+</body>
+</html>

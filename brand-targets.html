@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>MAPL Sales Analysis | Brand Targets</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        .target-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            align-items: end;
+            margin-bottom: 22px;
+        }
+
+        .filter-field {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            min-width: 180px;
+        }
+
+        .filter-field label {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .filter-field select,
+        .filter-field input {
+            min-height: 43px;
+            padding: 10px 12px;
+            border: 1px solid #d9dce3;
+            border-radius: 8px;
+            background: #fff;
+            font: inherit;
+            color: #222;
+        }
+
+        .brand-target-summary {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+            margin-bottom: 22px;
+        }
+
+        .brand-target-summary .kpi-card {
+            min-width: 0;
+        }
+
+        .brand-target-summary .kpi-card strong {
+            overflow-wrap: anywhere;
+        }
+
+        .target-table input {
+            width: 100%;
+            min-width: 130px;
+            box-sizing: border-box;
+            padding: 10px 12px;
+            border: 1px solid #d9dce3;
+            border-radius: 7px;
+            font: inherit;
+            text-align: right;
+        }
+
+        .target-table input:focus {
+            outline: 2px solid #e51d2a;
+            border-color: #e51d2a;
+        }
+
+        .target-table .brand-name {
+            font-weight: 600;
+        }
+
+        .target-table .amount {
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .target-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .target-toolbar p {
+            margin: 4px 0 0;
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        .target-message {
+            display: none;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 14px;
+        }
+
+        .target-message.success {
+            display: block;
+            color: #166534;
+            background: #dcfce7;
+        }
+
+        .target-message.error {
+            display: block;
+            color: #991b1b;
+            background: #fee2e2;
+        }
+
+        .target-message.info {
+            display: block;
+            color: #1e40af;
+            background: #dbeafe;
+        }
+
+        .target-status {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            background: #f3f4f6;
+            color: #4b5563;
+        }
+
+        .target-status.saved {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .target-status.pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .target-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-top: 18px;
+        }
+
+        .target-footer strong {
+            font-size: 18px;
+        }
+
+        .secondary-button {
+            min-height: 42px;
+            padding: 10px 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            background: #fff;
+            cursor: pointer;
+            font: inherit;
+            font-weight: 600;
+        }
+
+        .secondary-button:hover {
+            background: #f9fafb;
+        }
+
+        .primary-button:disabled,
+        .secondary-button:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+
+        .loading-row {
+            text-align: center;
+            padding: 30px !important;
+            color: #6b7280;
+        }
+
+        @media (max-width: 700px) {
+            .brand-target-summary {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-field {
+                width: 100%;
+            }
+
+            .filter-field select,
+            .filter-field input {
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            .target-toolbar {
+                align-items: stretch;
+            }
+
+            .target-toolbar button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="app">
+
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="logo-box">
+                <img
+                    src="https://modinaautopartsltd.com/_next/static/media/logo.40df2f61.svg"
+                    alt="Modina Auto Parts Ltd."
+                >
+            </div>
+
+            <div>
+                <strong>Sales Analysis</strong>
+                <small>Management System</small>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="admin.html" class="nav-item">Dashboard</a>
+            <a href="admin.html#salesRecords" class="nav-item">Sales Records</a>
+            <a href="reports.html" class="nav-item">Reports</a>
+             <a href="targets.html" class="nav-item">Targets</a>
+            <a href="brand-targets.html" class="nav-item active">Brand Targets</a>
+            <a href="divisions.html" class="nav-item">Divisions</a>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <button type="button" id="logoutBtn" class="logout-button">
+                Sign Out
+            </button>
+        </div>
+    </aside>
+
+    <main class="main-content">
+
+        <header class="topbar">
+            <div>
+                <h1>Brand Target Management</h1>
+                <p>Manage monthly brand targets by division</p>
+            </div>
+
+            <div class="user-info">
+                <div class="user-avatar">A</div>
+                <div>
+                    <strong id="userName">Administrator</strong>
+                    <small id="userRole">ADMIN</small>
+                </div>
+            </div>
+        </header>
+
+        <section class="dashboard-card">
+            <div class="section-header">
+                <div>
+                    <h2>Target Selection</h2>
+                    <p>Select a month and division to manage brand targets.</p>
+                </div>
+            </div>
+
+            <div class="target-filters">
+                <div class="filter-field">
+                    <label for="targetMonth">Target Month</label>
+                    <input type="month" id="targetMonth">
+                </div>
+
+                <div class="filter-field">
+                    <label for="divisionSelect">Division</label>
+                    <select id="divisionSelect">
+                        <option value="">Loading divisions...</option>
+                    </select>
+                </div>
+
+                <button type="button" id="loadTargetsBtn" class="primary-button">
+                    Load Targets
+                </button>
+            </div>
+        </section>
+
+        <section class="brand-target-summary">
+            <div class="kpi-card">
+                <span>Total Brand Target</span>
+                <strong id="totalTarget">৳0</strong>
+            </div>
+
+            <div class="kpi-card">
+                <span>Brands with Target</span>
+                <strong id="brandsWithTarget">0 / 0</strong>
+            </div>
+
+            <div class="kpi-card">
+                <span>Selected Division</span>
+                <strong id="selectedDivisionName">—</strong>
+            </div>
+        </section>
+
+        <section class="dashboard-card">
+            <div class="target-toolbar">
+                <div>
+                    <h2 id="targetHeading">Monthly Brand Targets</h2>
+                    <p>Enter the target amount for each brand.</p>
+                </div>
+
+                <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                    <button type="button" id="resetTargetsBtn" class="secondary-button">
+                        Reset Changes
+                    </button>
+
+                    <button type="button" id="saveAllTargetsBtn" class="primary-button">
+                        Save All Targets
+                    </button>
+                </div>
+            </div>
+
+            <div id="targetMessage" class="target-message"></div>
+
+            <div class="table-container">
+                <table class="target-table">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Brand</th>
+                        <th>Current Saved Target</th>
+                        <th>Monthly Target (৳)</th>
+                        <th>Status</th>
+                    </tr>
+                    </thead>
+
+                    <tbody id="targetTableBody">
+                    <tr>
+                        <td colspan="5" class="loading-row">
+                            Loading brand targets...
+                        </td>
+                    </tr>
+                    </tbody>
+
+                    <tfoot>
+                    <tr>
+                        <th colspan="2">TOTAL</th>
+                        <th id="savedTotal" class="amount">৳0</th>
+                        <th id="enteredTotal" class="amount">৳0</th>
+                        <th></th>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+            <div class="target-footer">
+                <span id="targetCountText">0 brands</span>
+                <strong id="footerTotal">Total: ৳0</strong>
+            </div>
+        </section>
+
+        <section class="dashboard-card">
+            <div class="section-header">
+                <div>
+                    <h2>Important Information</h2>
+                </div>
+            </div>
+
+            <div class="management-note">
+                <p>
+                    Targets are saved separately for each Division, Brand, and Month.
+                    Updating one month will not overwrite another month's target.
+                </p>
+
+                <p>
+                    Existing Division Monthly Targets remain unchanged.
+                    This page manages the new Brand Target system only.
+                </p>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/brand-targets.js"></script>
+</body>
+</html>

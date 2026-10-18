@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Division & Brand Sales | MAPL
+    </title>
+
+    <!-- Existing MAPL CSS -->
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
+    <!-- New Page CSS -->
+    <link
+        rel="stylesheet"
+        href="css/division-brand-sales.css"
+    >
+</head>
+
+
+<body>
+
+<div class="app-layout">
+
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+    <aside class="sidebar">
+
+        <div class="sidebar-brand">
+
+            <div class="brand-logo">
+                MAPL
+            </div>
+
+            <div>
+                <strong>
+                    Modina Auto Parts Ltd.
+                </strong>
+
+                <small>
+                    Sales Management
+                </small>
+            </div>
+
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+            <a
+                href="admin.html"
+                class="nav-item"
+            >
+                Dashboard
+            </a>
+
+
+            <a
+                href="division-brand-sales.html"
+                class="nav-item active"
+            >
+                Division & Brand Sales
+            </a>
+
+
+            <a
+                href="reports.html"
+                class="nav-item"
+            >
+                Reports
+            </a>
+
+
+            <a
+                href="targets.html"
+                class="nav-item"
+            >
+                Targets
+            </a>
+
+
+            <a
+                href="brand-targets.html"
+                class="nav-item"
+            >
+                Brand Targets
+            </a>
+
+
+            <a
+                href="divisions.html"
+                class="nav-item"
+            >
+                Divisions
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <button
+                type="button"
+                id="logoutBtn"
+                class="logout-button"
+            >
+                Sign Out
+            </button>
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
+
+    <main class="main-content">
+
+
+        <!-- TOPBAR -->
+
+        <header class="topbar">
+
+            <div>
+
+                <h1>
+                    Division & Brand Sales
+                </h1>
+
+                <p>
+                    Record and manage brand-wise sales
+                </p>
+
+            </div>
+
+
+            <div class="user-info">
+
+                <div class="user-avatar">
+                    M
+                </div>
+
+                <div>
+
+                    <strong id="userName">
+                        Administrator
+                    </strong>
+
+                    <small id="userRole">
+                        ADMIN
+                    </small>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+
+        <!-- MESSAGE -->
+
+        <div
+            id="pageMessage"
+            class="page-message"
+        ></div>
+
+
+
+        <!-- =================================================
+             KPI
+        ================================================== -->
+
+        <section class="sales-kpi-grid">
+
+
+            <div class="sales-kpi-card">
+
+                <span>
+                    Today's Sales
+                </span>
+
+                <strong id="todaySales">
+                    ৳0
+                </strong>
+
+            </div>
+
+
+            <div class="sales-kpi-card">
+
+                <span>
+                    This Month
+                </span>
+
+                <strong id="monthSales">
+                    ৳0
+                </strong>
+
+            </div>
+
+
+            <div class="sales-kpi-card">
+
+                <span>
+                    Total Transactions
+                </span>
+
+                <strong id="transactionCount">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="sales-kpi-card">
+
+                <span>
+                    Selected Division
+                </span>
+
+                <strong id="selectedDivisionTotal">
+                    ৳0
+                </strong>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             ENTRY FORM
+        ================================================== -->
+
+        <section class="sales-card">
+
+
+            <div class="sales-card-header">
+
+                <div>
+
+                    <h2>
+                        Sales Entry
+                    </h2>
+
+                    <p>
+                        Enter sales by Division and Brand
+                    </p>
+
+                </div>
+
+
+                <span
+                    id="formMode"
+                    class="form-mode"
+                >
+                    NEW ENTRY
+                </span>
+
+            </div>
+
+
+
+            <form
+                id="salesForm"
+                class="brand-sales-form"
+            >
+
+                <input
+                    type="hidden"
+                    id="saleId"
+                >
+
+
+                <!-- DATE -->
+
+                <div class="form-field">
+
+                    <label for="saleDate">
+                        Sale Date
+                    </label>
+
+                    <input
+                        type="date"
+                        id="saleDate"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- DIVISION -->
+
+                <div class="form-field">
+
+                    <label for="saleDivision">
+                        Division
+                    </label>
+
+                    <select
+                        id="saleDivision"
+                        required
+                    >
+
+                        <option value="">
+                            Select Division
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- BRAND -->
+
+                <div class="form-field">
+
+                    <label for="saleBrand">
+                        Brand
+                    </label>
+
+                    <select
+                        id="saleBrand"
+                        required
+                        disabled
+                    >
+
+                        <option value="">
+                            Select Division First
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- SALES -->
+
+                <div class="form-field">
+
+                    <label for="salesAmount">
+                        Sales Amount
+                    </label>
+
+                    <div class="amount-input">
+
+                        <span>
+                            ৳
+                        </span>
+
+                        <input
+                            type="number"
+                            id="salesAmount"
+                            min="0"
+                            step="0.01"
+                            inputmode="decimal"
+                            placeholder="0.00"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- REMARKS -->
+
+                <div class="form-field full-width">
+
+                    <label for="salesRemarks">
+                        Remarks
+                    </label>
+
+                    <input
+                        type="text"
+                        id="salesRemarks"
+                        maxlength="500"
+                        placeholder="Optional remarks"
+                    >
+
+                </div>
+
+
+
+                <!-- ACTIONS -->
+
+                <div class="form-actions full-width">
+
+                    <button
+                        type="submit"
+                        id="saveSaleBtn"
+                        class="btn-primary"
+                    >
+                        Save Sales
+                    </button>
+
+
+                    <button
+                        type="button"
+                        id="cancelEditBtn"
+                        class="btn-secondary hidden"
+                    >
+                        Cancel Edit
+                    </button>
+
+
+                    <button
+                        type="button"
+                        id="resetFormBtn"
+                        class="btn-light"
+                    >
+                        Reset
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+
+
+        <!-- =================================================
+             FILTER
+        ================================================== -->
+
+        <section class="sales-card">
+
+            <div class="sales-card-header">
+
+                <div>
+
+                    <h2>
+                        Sales Records
+                    </h2>
+
+                    <p>
+                        Search, filter, edit or delete sales
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="sales-filter-grid">
+
+
+                <div class="form-field">
+
+                    <label>
+                        From Date
+                    </label>
+
+                    <input
+                        type="date"
+                        id="filterFromDate"
+                    >
+
+                </div>
+
+
+                <div class="form-field">
+
+                    <label>
+                        To Date
+                    </label>
+
+                    <input
+                        type="date"
+                        id="filterToDate"
+                    >
+
+                </div>
+
+
+                <div class="form-field">
+
+                    <label>
+                        Division
+                    </label>
+
+                    <select id="filterDivision">
+
+                        <option value="">
+                            All Divisions
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-field">
+
+                    <label>
+                        Brand
+                    </label>
+
+                    <select id="filterBrand">
+
+                        <option value="">
+                            All Brands
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-field search-field">
+
+                    <label>
+                        Search
+                    </label>
+
+                    <input
+                        type="search"
+                        id="searchSales"
+                        placeholder="Search division, brand, remarks..."
+                    >
+
+                </div>
+
+
+                <div class="filter-actions">
+
+                    <button
+                        type="button"
+                        id="applyFilterBtn"
+                        class="btn-primary"
+                    >
+                        Apply
+                    </button>
+
+
+                    <button
+                        type="button"
+                        id="clearFilterBtn"
+                        class="btn-light"
+                    >
+                        Clear
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             TABLE
+        ================================================== -->
+
+        <section class="sales-card">
+
+            <div class="table-responsive">
+
+                <table class="sales-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                #
+                            </th>
+
+                            <th>
+                                Date
+                            </th>
+
+                            <th>
+                                Division
+                            </th>
+
+                            <th>
+                                Brand
+                            </th>
+
+                            <th class="text-right">
+                                Sales
+                            </th>
+
+                            <th>
+                                Remarks
+                            </th>
+
+                            <th>
+                                Action
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="salesTableBody">
+
+                        <tr>
+
+                            <td
+                                colspan="7"
+                                class="loading-cell"
+                            >
+                                Loading sales...
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+
+                    <tfoot>
+
+                        <tr>
+
+                            <td
+                                colspan="4"
+                                class="total-label"
+                            >
+                                Filtered Total
+                            </td>
+
+                            <td
+                                id="filteredTotal"
+                                class="text-right total-amount"
+                            >
+                                ৳0
+                            </td>
+
+                            <td colspan="2"></td>
+
+                        </tr>
+
+                    </tfoot>
+
+                </table>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+
+<!-- Supabase -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+></script>
+
+
+<!-- Existing Config -->
+
+<script src="js/config.js"></script>
+
+
+<!-- Page JS -->
+
+<script src="js/division-brand-sales.js"></script>
+
+</body>
+
+</html>
